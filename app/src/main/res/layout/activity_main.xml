@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,54 +7,25 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="303dp"
+        android:background="@android:color/darker_gray"
+        android:padding="4dp"
+        android:scrollbars="vertical"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
 
-        <TextView
-            android:id="@+id/mName"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:ems="10"
-            android:fontFamily="@font/raleway_bold"
-            android:gravity="center"
-            android:text="@string/name"
-            android:textSize="30sp" />
+    </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/mPrice"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center"
-
-            android:text="@string/price"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/mPercentChange"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center"
-
-            android:text="@string/percent_change"
-            android:textSize="24sp" />
-
-        <TextView
-            android:id="@+id/mDollarChange"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:gravity="center"
-
-            android:text="Change in Magnitude "
-            android:textSize="24sp" />
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/addCoinButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_crypto" />
+        android:text="@string/add_crypto"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        tools:layout_editor_absoluteX="16dp" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

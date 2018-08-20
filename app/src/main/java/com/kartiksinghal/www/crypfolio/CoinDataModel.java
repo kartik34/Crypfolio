@@ -6,6 +6,8 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Currency;
 public class CoinDataModel {
 
@@ -43,7 +45,11 @@ public class CoinDataModel {
             Log.d("specific", "Price is: " + jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("PRICE"));
             coinData.mPercentChange = Double.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGEPCT24HOUR")));
 
-            coinData.mDollarChange = Double.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR")));
+            double d = jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR");
+            BigDecimal bd = new BigDecimal(d);
+            bd = bd.round(new MathContext(3));
+            double rounded = bd.doubleValue();
+            coinData.mDollarChange = Double.toString(rounded);
 
 
 
@@ -72,4 +78,11 @@ public class CoinDataModel {
         return mPercentChange;
     }
 
+    public static String getCurrency() {
+        return Currency;
+    }
+
+    public static String getCrypto() {
+        return Crypto;
+    }
 }

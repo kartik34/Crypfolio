@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -19,12 +23,17 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
-    final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
+    final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
 
     TextView mName;
     TextView mPercentChange;
@@ -145,19 +154,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(CoinDataModel coin){ //update ui will feature all coins and data, not just one
 
+        ArrayList<coinItem> coinList = new ArrayList<>();
+        Log.d("debug", crypto + currency);
+        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
+        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
 
-        mName.setText(crypto);
-        String price = "$" + coin.getmPrice() + " USD";
-        mPrice.setText(price);
+        //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
 
-        String percentChange = "Δ24h " + coin.getmPercentChange() + "%";
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new CoinAdapter(coinList);
 
-        mPercentChange.setText(percentChange);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
-        String dollarChange = "Δ24h $" + coin.getmDollarChange();
-
-        mDollarChange.setText(dollarChange);
-        // ADD NEW SECTION HERE ONLY
+//         mName.setText(crypto);
+//        String price = "$" + coin.getmPrice() + " USD";
+//        mPrice.setText(price);
+//
+//        String percentChange = "Δ24h " + coin.getmPercentChange() + "%";
+//
+//        mPercentChange.setText(percentChange);
+//
+//        String dollarChange = "Δ24h $" + coin.getmDollarChange();
+//
+//        mDollarChange.setText(dollarChange);
+//        // ADD NEW SECTION HERE ONLY
 
     }
     public void saveData(String coin){
@@ -174,5 +196,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         cryptoCoin = sharedPreferences.getString(COIN, "");
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.crypfolio_menu, menu);
+        return true;
     }
 }
