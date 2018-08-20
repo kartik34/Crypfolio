@@ -1,34 +1,75 @@
 package com.kartiksinghal.www.crypfolio;
 
+import android.support.annotation.Nullable;
+import android.util.Log;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Currency;
 public class CoinDataModel {
 
-    private int mPrice;
-    private String mName;
-    private int mPercentChange;
+    private String mPrice;
+    private String mPercentChange;
+    private String mDollarChange;
+    private static String Currency;
+    private static String Crypto;
+
+    public static CoinDataModel setConstants(String curr, String cryp){
 
 
-    public static CoinDataModel fromJson(JSONObject jsonObject){
+        Currency = curr;
+        Crypto = cryp;
 
-        CoinDataModel weatherData = new CoinDataModel();
+        CoinDataModel constantModel = new CoinDataModel();
 
-
-
-        return weatherData;
-
+        return constantModel;
     }
 
+    @Nullable
+    public static CoinDataModel fromJSON(JSONObject jsonObject) {
 
-    public int getmPrice() {
+
+        try {
+
+
+
+            CoinDataModel coinData = new CoinDataModel();
+            Log.d("DATA2", Currency);
+
+
+            coinData.mPrice = Double.toString(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("PRICE"));
+
+            Log.d("specific", "Price is: " + jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("PRICE"));
+            coinData.mPercentChange = Integer.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("CHANGEPCT24HOUR")));
+
+            coinData.mDollarChange = Integer.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("CHANGE24HOUR")));
+
+
+
+
+            return coinData;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+
+
+        }
+
+
+
+    }
+    public String getmPrice () {
         return mPrice;
     }
 
-    public String getmName() {
-        return mName;
+    public String getmDollarChange() {
+        return mDollarChange;
     }
 
-    public int getmPercentChange() {
+    public String getmPercentChange () {
         return mPercentChange;
     }
+
 }

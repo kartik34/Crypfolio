@@ -4,5 +4,5 @@
     <string name="name">Coin Name</string>
     <string name="price">Price</string>
     <string name="percent_change">Percent Change</string>
-
+    <string name="back_button">Back</string>
 </resources>

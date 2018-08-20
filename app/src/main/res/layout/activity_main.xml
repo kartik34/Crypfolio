@@ -17,19 +17,37 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:ems="10"
-            android:text="@string/name" />
+            android:fontFamily="@font/raleway_bold"
+            android:gravity="center"
+            android:text="@string/name"
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/mPrice"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="@string/price" />
+            android:gravity="center"
+
+            android:text="@string/price"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/mPercentChange"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:text="@string/percent_change" />
+            android:gravity="center"
+
+            android:text="@string/percent_change"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/mDollarChange"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+
+            android:text="Change in Magnitude "
+            android:textSize="24sp" />
 
     </LinearLayout>
 

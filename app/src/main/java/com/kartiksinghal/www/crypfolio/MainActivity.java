@@ -16,63 +16,80 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
-    final String URL = "hhttps://min-api.cryptocompare.com/data/price";
+    final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
 
     TextView mName;
     TextView mPercentChange;
     TextView mPrice;
+
+
+    String crypto;
+    final String currency = "USD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button changeCityButton = findViewById(R.id.addCoinButton);
+        Button addCoinButton = findViewById(R.id.addCoinButton);
 
         mName =  findViewById(R.id.mName);
         mPercentChange =  findViewById(R.id.mPercentChange);
         mPrice =  findViewById(R.id.mPrice);
 
-        changeCityButton.setOnClickListener(new View.OnClickListener() {
+
+
+        addCoinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this, CoinAddController.class);
                 startActivity(myIntent);
             }
         });
 
-        addCoin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
     }
 
     @Override
     protected void onResume() {
+
+
         super.onResume();
         Log.d("Debug", "onResume() called");
 
+
         Intent myIntent = getIntent();
+
         String Coin = myIntent.getStringExtra("Coin");
 
-        getCoinData(Coin);
+        if(Coin != null){
+
+
+            getCoinData(Coin);
+
+        }
+
 
 
 
 
     }
-    private void getCoinData(String name){
+    private void getCoinData(String coin){
 
         RequestParams params = new RequestParams();
-        params.put("fsym", name);
-        params.put("tsyms", "USD");
+        params.put("fsyms", coin);
+        params.put("tsyms", currency);
+
+        crypto = coin;
+
+        CoinDataModel constantModel = CoinDataModel.setConstants(currency, coin);
 
         connect(params);
     }
@@ -87,9 +104,11 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d("Debug", "Success: " + response.toString());
 
-                CoinDataModel weatherData = CoinDataModel.fromJson(response);
 
-                updateUI(weatherData);
+                CoinDataModel coinData = CoinDataModel.fromJSON(response);
+
+
+                updateUI(coinData);
 
             }
             @Override
@@ -106,11 +125,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(CoinDataModel coin){
 
+            Log.d("SPECIFIC", "WE MADE IT THIS FAR");
+
+        Log.d("SPECIFIC", coin.getmPrice());
+
         mPrice.setText(coin.getmPrice());
 
         mPercentChange.setText(coin.getmPercentChange());
-
-        mName.setText(coin.getmName());
 
 
     }
