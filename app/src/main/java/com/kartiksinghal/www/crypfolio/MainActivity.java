@@ -1,6 +1,7 @@
 package com.kartiksinghal.www.crypfolio;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     TextView mPrice;
     TextView mDollarChange;
 
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String COIN = "coin";
+
+    private String cryptoCoin;
 
     String crypto;
     final String currency = "USD";
@@ -40,12 +45,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button addCoinButton = findViewById(R.id.addCoinButton);
-
         mName =  findViewById(R.id.mName);
         mPercentChange =  findViewById(R.id.mPercentChange);
         mPrice =  findViewById(R.id.mPrice);
         mDollarChange = findViewById(R.id.mDollarChange);
-
 
         addCoinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
-
 
     }
 
@@ -67,14 +69,19 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Debug", "onResume() called");
 
 
+        loadData();
         Intent myIntent = getIntent();
 
         String Coin = myIntent.getStringExtra("Coin");
 
         if(Coin != null){
+            saveData(Coin);
+            loadData();
+            getCoinData(cryptoCoin);
 
 
-            getCoinData(Coin);
+        }else{
+            getCoinData(cryptoCoin);
 
         }
 
@@ -129,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI(CoinDataModel coin){ //update ui will feature all coins and data, not just one
 
 
-        saveData();
         mName.setText(crypto);
         String price = "$" + coin.getmPrice() + " USD";
         mPrice.setText(price);
@@ -141,10 +147,26 @@ public class MainActivity extends AppCompatActivity {
         String dollarChange = "Δ24h $" + coin.getmDollarChange();
 
         mDollarChange.setText(dollarChange);
+        // ADD NEW SECTION HERE ONLY
+
+    }
+    public void saveData(String coin){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(COIN,  coin);
+
+        editor.apply();
+
+        Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
+
 
 
     }
-    public void saveData(){
+
+    public void loadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        cryptoCoin = sharedPreferences.getString(COIN, "");
 
     }
 }
