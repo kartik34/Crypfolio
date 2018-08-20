@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -53,20 +54,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button addCoinButton = findViewById(R.id.addCoinButton);
         mName =  findViewById(R.id.mName);
         mPercentChange =  findViewById(R.id.mPercentChange);
         mPrice =  findViewById(R.id.mPrice);
         mDollarChange = findViewById(R.id.mDollarChange);
 
-        addCoinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent myIntent;
-                myIntent = new Intent(MainActivity.this, CoinAddController.class);
-                startActivity(myIntent);
-            }
-        });
+
 
     }
 
@@ -158,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d("debug", crypto + currency);
         coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
         coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
+        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
+        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
+        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
 
         //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
 
@@ -203,5 +199,17 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.crypfolio_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Toast.makeText(this, "Item clicked", Toast.LENGTH_SHORT).show();
+
+        Intent myIntent;
+        myIntent = new Intent(MainActivity.this, CoinAddController.class);
+        startActivity(myIntent);
+
+        return super.onOptionsItemSelected(item);
     }
 }
