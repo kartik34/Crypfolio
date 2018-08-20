@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mName;
     TextView mPercentChange;
     TextView mPrice;
+    TextView mDollarChange;
 
 
     String crypto;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mName =  findViewById(R.id.mName);
         mPercentChange =  findViewById(R.id.mPercentChange);
         mPrice =  findViewById(R.id.mPrice);
-
+        mDollarChange = findViewById(R.id.mDollarChange);
 
 
         addCoinButton.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
         connect(params);
     }
-    private void connect(RequestParams params){
+
+    private void connect(RequestParams params){  //connect to CryptoCompare API and retrieve json body
 
         AsyncHttpClient client = new AsyncHttpClient();
 
@@ -105,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Debug", "Success: " + response.toString());
 
 
-                CoinDataModel coinData = CoinDataModel.fromJSON(response);
+                CoinDataModel coinData = CoinDataModel.fromJSON(response); //use constructor to create dataModel object
 
 
-                updateUI(coinData);
+                updateUI(coinData); //Update the UI by passing dataModel object
 
             }
             @Override
@@ -125,13 +127,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(CoinDataModel coin){
 
-            Log.d("SPECIFIC", "WE MADE IT THIS FAR");
 
-        Log.d("SPECIFIC", coin.getmPrice());
 
-        mPrice.setText(coin.getmPrice());
+        mName.setText(crypto);
+        String price = "$" + coin.getmPrice() + " USD";
+        mPrice.setText(price);
 
-        mPercentChange.setText(coin.getmPercentChange());
+        String percentChange = "Δ24h " + coin.getmPercentChange() + "%";
+
+        mPercentChange.setText(percentChange);
+
+        String dollarChange = "Δ24h $" + coin.getmDollarChange();
+
+        mDollarChange.setText(dollarChange);
 
 
     }
