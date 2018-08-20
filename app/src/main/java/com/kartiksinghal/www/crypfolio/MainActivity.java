@@ -117,8 +117,18 @@ public class MainActivity extends AppCompatActivity {
 
                 CoinDataModel coinData = CoinDataModel.fromJSON(response); //use constructor to create dataModel object
 
+                if(coinData == null){
 
-                updateUI(coinData); //Update the UI by passing dataModel object
+                    Intent myIntent;
+                    myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                    startActivity(myIntent);
+
+                    Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
+
+                }else{
+                    updateUI(coinData); //Update the UI by passing dataModel object
+
+                }
 
             }
             @Override
@@ -151,16 +161,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void saveData(String coin){
+
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
         editor.putString(COIN,  coin);
-
         editor.apply();
-
         Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
-
-
 
     }
 
