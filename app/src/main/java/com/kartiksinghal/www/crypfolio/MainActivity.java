@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
 
+
     TextView mName;
     TextView mPercentChange;
     TextView mPrice;
@@ -125,10 +126,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateUI(CoinDataModel coin){
+    private void updateUI(CoinDataModel coin){ //update ui will feature all coins and data, not just one
 
 
-
+        saveData();
         mName.setText(crypto);
         String price = "$" + coin.getmPrice() + " USD";
         mPrice.setText(price);
@@ -141,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
 
         mDollarChange.setText(dollarChange);
 
+
+    }
+    public void saveData(){
 
     }
 }
