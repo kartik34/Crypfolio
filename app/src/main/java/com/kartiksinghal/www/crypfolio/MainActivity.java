@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             getCoinData(cryptoCoin);
 
 
-        }else{
+        }else if(cryptoCoin != "" && cryptoCoin != null){
             getCoinData(cryptoCoin);
 
         }

@@ -38,12 +38,12 @@ public class CoinDataModel {
             Log.d("DATA2", Currency);
 
 
-            coinData.mPrice = Double.toString(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("PRICE"));
+            coinData.mPrice = Double.toString(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("PRICE"));
 
             Log.d("specific", "Price is: " + jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("PRICE"));
-            coinData.mPercentChange = Integer.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("CHANGEPCT24HOUR")));
+            coinData.mPercentChange = Double.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGEPCT24HOUR")));
 
-            coinData.mDollarChange = Integer.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getInt("CHANGE24HOUR")));
+            coinData.mDollarChange = Double.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR")));
 
 
 
