@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     TextView mPercentChange;
     TextView mPrice;
     TextView mDollarChange;
+
+    ArrayList<String> coinsArrayList = new ArrayList<>();
 
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COIN = "coin";
@@ -76,14 +79,16 @@ public class MainActivity extends AppCompatActivity {
 
         String Coin = myIntent.getStringExtra("Coin");
 
+
+
         if(Coin != null){
-            saveData(Coin);
-            loadData();
-            getCoinData(cryptoCoin);
 
 
-        }else if(cryptoCoin != "" && cryptoCoin != null){
-            getCoinData(cryptoCoin);
+            getCoinData(Coin);
+
+
+        }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
+            getCoinData(coinsArrayList.get(1));
 
         }
 
@@ -128,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
 
                 }else{
+
+
+                    saveData(CoinDataModel.getCrypto());
+                    loadData();
+
                     updateUI(coinData); //Update the UI by passing dataModel object
 
                 }
@@ -182,15 +192,42 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(COIN,  coin);
-        editor.apply();
-        Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
+
+        if(coinsArrayList.contains(coin) == false){
+            if(cryptoCoin != "" && cryptoCoin != null){
+                cryptoCoin = sharedPreferences.getString(COIN, "");
+
+                cryptoCoin = cryptoCoin + "," + coin;
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
+
+            }else{
+                cryptoCoin = coin;
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+
+
+
 
     }
 
     public void loadData(){
+
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+
         cryptoCoin = sharedPreferences.getString(COIN, "");
+
+        Log.d("currencies" , cryptoCoin);
+
+        coinsArrayList = convertToArray(cryptoCoin);
+
+
 
     }
 
@@ -211,5 +248,22 @@ public class MainActivity extends AppCompatActivity {
         startActivity(myIntent);
 
         return super.onOptionsItemSelected(item);
+    }
+    private String convertToString(ArrayList<String> list) {
+
+        StringBuilder sb = new StringBuilder();
+        String delim = "";
+        for (String s : list)
+        {
+            sb.append(delim);
+            sb.append(s);
+            delim = ",";
+        }
+        return sb.toString();
+    }
+    private ArrayList<String> convertToArray(String string) {
+
+        ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
+        return list;
     }
 }
