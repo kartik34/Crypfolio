@@ -16,14 +16,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.annotation.Nullable;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -35,12 +40,20 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+
     final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
 
     TextView mName;
     TextView mPercentChange;
     TextView mPrice;
     TextView mDollarChange;
+
+    private String mCoinPrice;
+    private String mCoinPercentChange;
+    private String mCoinDollarChange;
+    private String Currency;
+    private String Crypto;
+    Gson gson = new Gson(); // Or use new GsonBuilder().create();
 
     ArrayList<String> coinsArrayList = new ArrayList<>();
 
@@ -83,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(Coin != null){
 
-
-            getCoinData(Coin);
+            saveData(Coin);
+            loadData();
+            updateUI(coinsArrayList);
 
 
         }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
-            getCoinData(coinsArrayList.get(1));
+            updateUI(coinsArrayList);
 
         }
 
@@ -99,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void getCoinData(String coin){
 
+//        Log.d("debug", coin);
         RequestParams params = new RequestParams();
         params.put("fsyms", coin);
         params.put("tsyms", currency);
@@ -119,12 +134,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response){
 
-                Log.d("Debug", "Success: " + response.toString());
+//                Log.d("Debug", "Success: " + response.toString());
+
+                String json = gson.toJson(response);
+                parseJson(json);
 
 
-                CoinDataModel coinData = CoinDataModel.fromJSON(response); //use constructor to create dataModel object
 
-                if(coinData == null){
+
+
+                if(response == null){
 
                     Intent myIntent;
                     myIntent = new Intent(MainActivity.this, CoinAddController.class);
@@ -135,10 +154,11 @@ public class MainActivity extends AppCompatActivity {
                 }else{
 
 
-                    saveData(CoinDataModel.getCrypto());
+
+                    saveData(crypto);
                     loadData();
 
-                    updateUI(coinData); //Update the UI by passing dataModel object
+                   //Update the UI by passing dataModel object
 
                 }
 
@@ -155,15 +175,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateUI(CoinDataModel coin){ //update ui will feature all coins and data, not just one
+    private void updateUI(ArrayList<String> list){ //update ui will feature all coins and data, not just one
 
         ArrayList<coinItem> coinList = new ArrayList<>();
-        Log.d("debug", crypto + currency);
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
+
+
+        for(String x: list){
+            getCoinData(x);
+            coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, crypto, currency));
+
+        }
+
 
         //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
 
@@ -210,9 +232,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-
-
-
 
 
     }
@@ -265,5 +284,44 @@ public class MainActivity extends AppCompatActivity {
 
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
         return list;
+    }
+
+    public void parseJson(String json){
+
+        try{
+                Log.d("debug", "method called");
+            Log.d("debug", json);
+
+
+            //Should be working, implement Gson or something.
+
+                JSONObject jsonObject = gson.fromJson(json, JSONObject.class);
+
+//            Log.d("debug", jsonObject.toString());
+
+
+
+            mCoinPrice = Double.toString(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("PRICE"));
+
+                Log.d("debug", mCoinPrice);
+
+
+                mCoinPercentChange = Double.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGEPCT24HOUR")));
+
+                double d = jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR");
+                BigDecimal bd = new BigDecimal(d);
+                bd = bd.round(new MathContext(3));
+                double rounded = bd.doubleValue();
+                mCoinDollarChange = Double.toString(rounded);
+
+                Log.d("debug", "It works: " + mCoinPrice);
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+
+
+        }
+
+
     }
 }
