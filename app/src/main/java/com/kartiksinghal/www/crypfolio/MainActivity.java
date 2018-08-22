@@ -198,12 +198,19 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d("debug", mCoinPrice);
 
 
-            mCoinPrice = Double.toString(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("PRICE"));
-            mCoinDollarChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("CHANGE24HOUR")));
-            mCoinPercentChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("CHANGEPCT24HOUR")));
+            ArrayList<coinItem> coinList = new ArrayList<>();
 
-                    ArrayList<coinItem> coinList = new ArrayList<>();
-            coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, coinsArrayList.get(0), currency));
+
+            for(String i : coinsArrayList){
+
+                mCoinPrice = Double.toString(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE"));
+                mCoinDollarChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR")));
+                mCoinPercentChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGEPCT24HOUR")));
+
+                coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, i, currency));
+
+
+            }
             mRecyclerView = findViewById(R.id.recyclerView);
             mLayoutManager = new LinearLayoutManager(this);
             mAdapter = new CoinAdapter(coinList);
