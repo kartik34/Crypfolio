@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
-
+    public static final String SHARED_PREFS = "sharedPrefs";
+    public static final String COIN = "coin";
     TextView mName;
     TextView mPercentChange;
     TextView mPrice;
@@ -51,18 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private String mCoinPrice;
     private String mCoinPercentChange;
     private String mCoinDollarChange;
-    private String Currency;
-    private String Crypto;
-    Gson gson = new Gson(); // Or use new GsonBuilder().create();
 
+
+    int count = 0;
+    String params = "";
     ArrayList<String> coinsArrayList = new ArrayList<>();
 
-    public static final String SHARED_PREFS = "sharedPrefs";
-    public static final String COIN = "coin";
 
-    private String cryptoCoin;
-
-    String crypto;
+    private String cryptoCoin; //string version of coinsArrayList
     final String currency = "USD";
 
     @Override
@@ -92,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
         String Coin = myIntent.getStringExtra("Coin");
 
-
-
         if(Coin != null){
 
             saveData(Coin);
@@ -106,22 +101,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-
-
-
     }
     private void getCoinData(String coin){
 
-//        Log.d("debug", coin);
+        Log.d("debug", "getCoinData() called");
         RequestParams params = new RequestParams();
         params.put("fsyms", coin);
         params.put("tsyms", currency);
 
-        crypto = coin;
-
         CoinDataModel constantModel = CoinDataModel.setConstants(currency, coin);
-
         connect(params);
     }
 
@@ -129,38 +117,38 @@ public class MainActivity extends AppCompatActivity {
 
         AsyncHttpClient client = new AsyncHttpClient();
 
+        Log.d("debug", "connect() called");
+
         client.get(URL, params, new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response){
 
-//                Log.d("Debug", "Success: " + response.toString());
+                Log.d("Debug", "onSuccess() called");
 
-                String json = gson.toJson(response);
-                parseJson(json);
+                Log.d("Debug", "API Response: " + response.toString());
 
-
-
+                parseJson(response);
 
 
-                if(response == null){
-
-                    Intent myIntent;
-                    myIntent = new Intent(MainActivity.this, CoinAddController.class);
-                    startActivity(myIntent);
-
-                    Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
-
-                }else{
-
-
-
-                    saveData(crypto);
-                    loadData();
-
-                   //Update the UI by passing dataModel object
-
-                }
+//                if(test(response)){
+//                    Log.d("currencies", "hello");
+//                    loadData();
+//                    coinsArrayList.remove(coinsArrayList.size()-1);
+//                    Intent myIntent;
+//                    myIntent = new Intent(MainActivity.this, CoinAddController.class);
+//                    startActivity(myIntent);
+//
+//                    Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
+//
+//                }else{
+//
+//                    Log.d("currencies", "hello");
+//
+//
+//                    //Update the UI by passing dataModel object
+//
+//                }
 
             }
             @Override
@@ -175,47 +163,82 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateUI(ArrayList<String> list){ //update ui will feature all coins and data, not just one
-
-        ArrayList<coinItem> coinList = new ArrayList<>();
+    public void updateUI(ArrayList<String> list) { //update ui will feature all coins and data, not just one
 
 
-        for(String x: list){
-            getCoinData(x);
-            coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, crypto, currency));
+
+        for (String x : list) {
+            count++;
+            Log.d("debug", x);
+
+            if (count == 1) {
+                params = x;
+
+            } else {
+                params = params + "," + x;
+            }
+
+
+        }
+
+        getCoinData(params);
+
+
+    }
+
+    public void parseJson(JSONObject json){
+
+        try{
+            Log.d("debug", "parseJson() called");
+            Log.d("debug", "JSON : "+ json.toString());
+
+            loadData();
+            Log.d("debug", "price: " + Double.toString(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("PRICE")));
+//
+//            Log.d("debug", mCoinPrice);
+
+
+            mCoinPrice = Double.toString(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("PRICE"));
+            mCoinDollarChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("CHANGE24HOUR")));
+            mCoinPercentChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("CHANGEPCT24HOUR")));
+
+                    ArrayList<coinItem> coinList = new ArrayList<>();
+            coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, coinsArrayList.get(0), currency));
+            mRecyclerView = findViewById(R.id.recyclerView);
+            mLayoutManager = new LinearLayoutManager(this);
+            mAdapter = new CoinAdapter(coinList);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setAdapter(mAdapter);
+//            double d = json.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR");
+//            BigDecimal bd = new BigDecimal(d);
+//            bd = bd.round(new MathContext(3));
+//            double rounded = bd.doubleValue();
+//            mCoinDollarChange = Double.toString(rounded);
+//
+//            Log.d("debug", "It works: " + mCoinPrice);
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+
 
         }
 
 
-        //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
-
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new CoinAdapter(coinList);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
-
-//         mName.setText(crypto);
-//        String price = "$" + coin.getmPrice() + " USD";
-//        mPrice.setText(price);
-//
-//        String percentChange = "Δ24h " + coin.getmPercentChange() + "%";
-//
-//        mPercentChange.setText(percentChange);
-//
-//        String dollarChange = "Δ24h $" + coin.getmDollarChange();
-//
-//        mDollarChange.setText(dollarChange);
-//        // ADD NEW SECTION HERE ONLY
-
     }
+
+    //===================================================================================================================
+
+    //                                  Don't touch
+
+    //===================================================================================================================
     public void saveData(String coin){
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if(coinsArrayList.contains(coin) == false){
+
+            Log.d("debug", "saveData() called");
             if(cryptoCoin != "" && cryptoCoin != null){
                 cryptoCoin = sharedPreferences.getString(COIN, "");
 
@@ -237,6 +260,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadData(){
+
+        Log.d("debug", "loadData() called");
+
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
@@ -285,43 +311,72 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
         return list;
     }
-
-    public void parseJson(String json){
-
+    public boolean test(JSONObject json){
         try{
-                Log.d("debug", "method called");
-            Log.d("debug", json);
+            if(json.getString("Response") == "Error"){
+                Log.d("debug", " failure test called");
+                return true;
+            }else{
+                Log.d("debug", " success test called");
 
-
-            //Should be working, implement Gson or something.
-
-                JSONObject jsonObject = gson.fromJson(json, JSONObject.class);
-
-//            Log.d("debug", jsonObject.toString());
-
-
-
-            mCoinPrice = Double.toString(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("PRICE"));
-
-                Log.d("debug", mCoinPrice);
-
-
-                mCoinPercentChange = Double.toString(Math.round(jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGEPCT24HOUR")));
-
-                double d = jsonObject.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR");
-                BigDecimal bd = new BigDecimal(d);
-                bd = bd.round(new MathContext(3));
-                double rounded = bd.doubleValue();
-                mCoinDollarChange = Double.toString(rounded);
-
-                Log.d("debug", "It works: " + mCoinPrice);
-
+                return false;
+            }
         }catch (JSONException e) {
             e.printStackTrace();
-
+            return false;
 
         }
-
-
     }
+
 }
+//    public boolean test(JSONObject json){
+//        try{
+//            if(json.getString("Response") == "Error" || json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(coinsArrayList.size() -1)) == null){
+//                Log.d("debug", " test called");
+//                return true;
+//            }else{
+//                Log.d("debug", " test called");
+//
+//                return false;
+//            }
+//        }catch (JSONException e) {
+//            e.printStackTrace();
+//            return false;
+//
+//        }
+//    }
+//
+//    public void updateUI(ArrayList<String> list) { //update ui will feature all coins and data, not just one
+//
+//        ArrayList<coinItem> coinList = new ArrayList<>();
+//
+//
+//        for (String x : list) {
+//            count++;
+//            Log.d("debug", x);
+//
+//            if (count == 1) {
+//                params = x;
+//
+//            } else {
+//                params = params + "," + x;
+//            }
+//
+//
+//        }
+//
+//        getCoinData(params);
+//
+//
+//        coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, crypto, currency));
+//
+//
+//        //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
+//
+//        mRecyclerView = findViewById(R.id.recyclerView);
+//        mLayoutManager = new LinearLayoutManager(this);
+//        mAdapter = new CoinAdapter(coinList);
+//
+//        mRecyclerView.setLayoutManager(mLayoutManager);
+//        mRecyclerView.setAdapter(mAdapter);
+//    }
