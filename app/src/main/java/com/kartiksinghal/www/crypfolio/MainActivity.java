@@ -204,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
             for(String i : coinsArrayList){
 
                 mCoinPrice = Double.toString(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE"));
-                mCoinDollarChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR")));
+                double d = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR");
+                BigDecimal bd = new BigDecimal(d);
+                bd = bd.round(new MathContext(3));
+                double rounded = bd.doubleValue();
+                mCoinDollarChange = Double.toString(rounded);
                 mCoinPercentChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGEPCT24HOUR")));
 
                 coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, i, currency));
