@@ -129,7 +129,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Debug", "onSuccess() called");
 
                 Log.d("Debug", "API Response: " + response.toString());
-                test(response, coinsArrayList);
+                coinsArrayList = test(response, coinsArrayList);
+
+                Log.d("debug" , "Coinsarraylist: " + coinsArrayList.get(coinsArrayList.size()-1));
+                Log.d("debug", "cryptoCoin: " + cryptoCoin);
 
 
 
@@ -310,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
         return list;
     }
-    public boolean test(JSONObject json, ArrayList<String> array){
+    public ArrayList<String> test(JSONObject json, ArrayList<String> array){
 
         Log.d("debug", "test() called");
 
@@ -319,8 +322,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d("debug", "test() try called");
             Log.d("debug", array.get(array.size()-1));
             if(!json.getJSONObject("RAW").has(array.get(array.size()-1))){
+                array.remove(array.size()-1);
                 Log.d("debug", "failure, send back to search page");
-            }return false;
+            }return array;
 //            Log.d("debug", json.getJSONObject("RAW").getJSONObject(array.get(array.size()-1)).toString());
 //            if(json.getString("Response") == "Error"){
 //
@@ -332,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
         }catch (JSONException e) {
 
             e.printStackTrace();
-            return false;
+            return array;
 
         }
     }
