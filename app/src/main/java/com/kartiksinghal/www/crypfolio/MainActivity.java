@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     TextView mPercentChange;
     TextView mPrice;
     TextView mDollarChange;
-
     private String mCoinPrice;
     private String mCoinPercentChange;
     private String mCoinDollarChange;
@@ -95,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         String Coin = myIntent.getStringExtra("Coin");
         if(Coin != null && !Coin.equals("")){
             Log.d("check", "coin == null called");
-            saveData(Coin);
+            saveData(Coin.toUpperCase());
             loadData();
             updateUI(coinsArrayList);
 
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             noData = new Intent(MainActivity.this, CoinAddController.class);
             startActivity(noData);
 
-            Toast.makeText(MainActivity.this, "Enter Valid Coin to Start2", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
 
         }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
             Log.d("check", "other called");
@@ -276,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             myIntent = new Intent(MainActivity.this, CoinAddController.class);
             startActivity(myIntent);
 
-            Toast.makeText(MainActivity.this, "You have already saved this coin", Toast.LENGTH_LONG).show();
+            Toast.makeText(MainActivity.this, "You Already Have That Coin Saved", Toast.LENGTH_LONG).show();
         }
 
 
@@ -353,6 +352,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("debug", "failure, send back to search page");
                 Intent myIntent;
                 myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                Toast.makeText(this, "Invalid Input (Enter coin code)", Toast.LENGTH_SHORT).show();
                 startActivity(myIntent);
             }
 
@@ -385,6 +385,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.apply();
                 Intent myIntent;
                 myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                Toast.makeText(this, "Invalid Input (Enter coin code)", Toast.LENGTH_SHORT).show();
 
                 startActivity(myIntent);
 
