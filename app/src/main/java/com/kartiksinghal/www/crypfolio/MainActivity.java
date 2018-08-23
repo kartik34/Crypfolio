@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.annotation.Nullable;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpClient;
@@ -88,15 +90,16 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = getIntent();
 
         String Coin = myIntent.getStringExtra("Coin");
-
         if(Coin != null){
-
+            Log.d("check", "coin == null called");
             saveData(Coin);
             loadData();
             updateUI(coinsArrayList);
 
 
         }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
+            Log.d("check", "other called");
+
             updateUI(coinsArrayList);
 
         }
@@ -109,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
         params.put("fsyms", coin);
         params.put("tsyms", currency);
 
-        CoinDataModel constantModel = CoinDataModel.setConstants(currency, coin);
         connect(params);
     }
 
@@ -127,28 +129,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Debug", "onSuccess() called");
 
                 Log.d("Debug", "API Response: " + response.toString());
+                test(response, coinsArrayList);
+
+
+
 
                 parseJson(response);
 
 
-//                if(test(response)){
-//                    Log.d("currencies", "hello");
-//                    loadData();
-//                    coinsArrayList.remove(coinsArrayList.size()-1);
-//                    Intent myIntent;
-//                    myIntent = new Intent(MainActivity.this, CoinAddController.class);
-//                    startActivity(myIntent);
-//
-//                    Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
-//
-//                }else{
-//
-//                    Log.d("currencies", "hello");
-//
-//
-//                    //Update the UI by passing dataModel object
-//
-//                }
 
             }
             @Override
@@ -193,9 +181,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("debug", "JSON : "+ json.toString());
 
             loadData();
-            Log.d("debug", "price: " + Double.toString(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(0)).getJSONObject(currency).getDouble("PRICE")));
-//
-//            Log.d("debug", mCoinPrice);
+            Log.d("debug", "price: " + Double.toString(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(coinsArrayList.size()-1)).getJSONObject(currency).getDouble("PRICE")));
 
 
             ArrayList<coinItem> coinList = new ArrayList<>();
@@ -203,7 +189,11 @@ public class MainActivity extends AppCompatActivity {
 
             for(String i : coinsArrayList){
 
+
                 mCoinPrice = Double.toString(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE"));
+                Log.d("check", "hello");
+
+                mCoinPrice = "$" + mCoinPrice;
                 double d = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR");
                 BigDecimal bd = new BigDecimal(d);
                 bd = bd.round(new MathContext(3));
@@ -297,8 +287,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Toast.makeText(this, "Item clicked", Toast.LENGTH_SHORT).show();
-
         Intent myIntent;
         myIntent = new Intent(MainActivity.this, CoinAddController.class);
         startActivity(myIntent);
@@ -322,17 +310,27 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
         return list;
     }
-    public boolean test(JSONObject json){
-        try{
-            if(json.getString("Response") == "Error"){
-                Log.d("debug", " failure test called");
-                return true;
-            }else{
-                Log.d("debug", " success test called");
+    public boolean test(JSONObject json, ArrayList<String> array){
 
-                return false;
-            }
+        Log.d("debug", "test() called");
+
+
+        try{
+            Log.d("debug", "test() try called");
+            Log.d("debug", array.get(array.size()-1));
+            if(!json.getJSONObject("RAW").has(array.get(array.size()-1))){
+                Log.d("debug", "failure, send back to search page");
+            }return false;
+//            Log.d("debug", json.getJSONObject("RAW").getJSONObject(array.get(array.size()-1)).toString());
+//            if(json.getString("Response") == "Error"){
+//
+//                return true;
+//            }else{
+//
+//                return false;
+//            }
         }catch (JSONException e) {
+
             e.printStackTrace();
             return false;
 

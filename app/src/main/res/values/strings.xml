@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Crypfolio</string>
-    <string name="add_crypto">Add Coin</string>
+    <string name="add_crypto">Add a New Coin</string>
     <string name="name">Coin Name</string>
     <string name="price">Price</string>
     <string name="percent_change">Percent Change</string>
