@@ -24,6 +24,13 @@ public class CoinAddController extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String coin = editTextField.getText().toString();
+
+                Intent newCoinIntent = new Intent(CoinAddController.this, MainActivity.class);
+                newCoinIntent.putExtra("Coin", coin );
+                startActivity(newCoinIntent);
+
+
                 finish(); //destroys the ChangeCityController activity and goes back to the weatherControllerLayout
             }
         });

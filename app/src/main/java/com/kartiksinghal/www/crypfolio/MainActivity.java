@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     }
 
     @Override
@@ -90,12 +91,19 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = getIntent();
 
         String Coin = myIntent.getStringExtra("Coin");
-        if(Coin != null){
+        if(Coin != null && !Coin.equals("")){
             Log.d("check", "coin == null called");
             saveData(Coin);
             loadData();
             updateUI(coinsArrayList);
 
+
+        }else if(coinsArrayList.get(0).equals("") ||coinsArrayList.get(0) == null){
+            Intent noData;
+            noData = new Intent(MainActivity.this, CoinAddController.class);
+            startActivity(noData);
+
+            Toast.makeText(MainActivity.this, "Enter Valid Coin to Start2", Toast.LENGTH_LONG).show();
 
         }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
             Log.d("check", "other called");
@@ -129,11 +137,15 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Debug", "onSuccess() called");
 
                 Log.d("Debug", "API Response: " + response.toString());
-                coinsArrayList = test(response, coinsArrayList);
+                if(coinsArrayList.size() == 1){
+                    coinsArrayList = testFirst(response, coinsArrayList);
+
+                }else{
+                    coinsArrayList = test(response, coinsArrayList);
+                }
 
                 Log.d("debug" , "Coinsarraylist: " + coinsArrayList.get(coinsArrayList.size()-1));
                 Log.d("debug", "cryptoCoin: " + cryptoCoin);
-
 
 
 
@@ -213,13 +225,7 @@ public class MainActivity extends AppCompatActivity {
             mAdapter = new CoinAdapter(coinList);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setAdapter(mAdapter);
-//            double d = json.getJSONObject("RAW").getJSONObject(Crypto).getJSONObject(Currency).getDouble("CHANGE24HOUR");
-//            BigDecimal bd = new BigDecimal(d);
-//            bd = bd.round(new MathContext(3));
-//            double rounded = bd.doubleValue();
-//            mCoinDollarChange = Double.toString(rounded);
-//
-//            Log.d("debug", "It works: " + mCoinPrice);
+
 
         }catch (JSONException e) {
             e.printStackTrace();
@@ -249,15 +255,19 @@ public class MainActivity extends AppCompatActivity {
                 cryptoCoin = cryptoCoin + "," + coin;
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
-                Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
 
             }else{
                 cryptoCoin = coin;
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
-                Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
             }
 
+        }else{
+            Intent myIntent;
+            myIntent = new Intent(MainActivity.this, CoinAddController.class);
+            startActivity(myIntent);
+
+            Toast.makeText(MainActivity.this, "You have already saved this coin", Toast.LENGTH_LONG).show();
         }
 
 
@@ -314,6 +324,8 @@ public class MainActivity extends AppCompatActivity {
         return list;
     }
     public ArrayList<String> test(JSONObject json, ArrayList<String> array){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         Log.d("debug", "test() called");
 
@@ -321,10 +333,35 @@ public class MainActivity extends AppCompatActivity {
         try{
             Log.d("debug", "test() try called");
             Log.d("debug", array.get(array.size()-1));
+
             if(!json.getJSONObject("RAW").has(array.get(array.size()-1))){
                 array.remove(array.size()-1);
+                ArrayList<String> validData = convertToArray(cryptoCoin);
+                validData.remove(validData.size()-1);
+                cryptoCoin = convertToString(validData);
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                startActivity(myIntent);
+                Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
                 Log.d("debug", "failure, send back to search page");
-            }return array;
+            }else if(json.getString("Response").equals("Error")){
+
+                Log.d("debug", "wssup inside else if");
+                array.remove(array.size()-1);
+                ArrayList<String> validData = convertToArray(cryptoCoin);
+                validData.remove(validData.size()-1);
+                cryptoCoin = convertToString(validData);
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                startActivity(myIntent);
+
+            }
+
+            return array;
 //            Log.d("debug", json.getJSONObject("RAW").getJSONObject(array.get(array.size()-1)).toString());
 //            if(json.getString("Response") == "Error"){
 //
@@ -333,6 +370,41 @@ public class MainActivity extends AppCompatActivity {
 //
 //                return false;
 //            }
+        }catch (JSONException e) {
+
+            e.printStackTrace();
+            return array;
+
+        }
+    }
+    public ArrayList<String> testFirst(JSONObject json, ArrayList<String> array){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Log.d("debug", "test() called");
+
+
+        try{
+            Log.d("debug", "test() try called");
+            Log.d("debug", array.get(array.size()-1));
+
+            if(json.getString("Response").equals("Error")){
+
+                Log.d("debug", "wssup inside else if");
+                array.remove(array.size()-1);
+                ArrayList<String> validData = convertToArray(cryptoCoin);
+                validData.remove(validData.size()-1);
+                cryptoCoin = convertToString(validData);
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                startActivity(myIntent);
+
+            }
+
+            return array;
+
         }catch (JSONException e) {
 
             e.printStackTrace();
