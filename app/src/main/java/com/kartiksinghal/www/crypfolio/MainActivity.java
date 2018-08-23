@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> coinsArrayList = new ArrayList<>();
 
 
-    private String cryptoCoin; //string version of coinsArrayList
+    private String cryptoCoin = ""; //string version of coinsArrayList
     final String currency = "USD";
 
     @Override
@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         loadData();
         Intent myIntent = getIntent();
+
+
 
         String Coin = myIntent.getStringExtra("Coin");
         if(Coin != null && !Coin.equals("")){
@@ -135,13 +137,15 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response){
 
                 Log.d("Debug", "onSuccess() called");
-
+                Log.d("Debug", "array size"+ coinsArrayList.size());
                 Log.d("Debug", "API Response: " + response.toString());
                 if(coinsArrayList.size() == 1){
-                    coinsArrayList = testFirst(response, coinsArrayList);
+                    testFirst(response, coinsArrayList);
 
                 }else{
-                    coinsArrayList = test(response, coinsArrayList);
+
+                    test(response, coinsArrayList);
+
                 }
 
                 Log.d("debug" , "Coinsarraylist: " + coinsArrayList.get(coinsArrayList.size()-1));
@@ -328,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
         return list;
     }
-    public ArrayList<String> test(JSONObject json, ArrayList<String> array){
+    public void test(JSONObject json, ArrayList<String> array){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -346,127 +350,52 @@ public class MainActivity extends AppCompatActivity {
                 cryptoCoin = convertToString(validData);
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
-                Intent myIntent;
-                myIntent = new Intent(MainActivity.this, CoinAddController.class);
-                startActivity(myIntent);
-                Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
                 Log.d("debug", "failure, send back to search page");
-            }else if(json.getString("Response").equals("Error")){
-
-                Log.d("debug", "wssup inside else if");
-                array.remove(array.size()-1);
-                ArrayList<String> validData = convertToArray(cryptoCoin);
-                validData.remove(validData.size()-1);
-                cryptoCoin = convertToString(validData);
-                editor.putString(COIN,  cryptoCoin);
-                editor.apply();
                 Intent myIntent;
                 myIntent = new Intent(MainActivity.this, CoinAddController.class);
                 startActivity(myIntent);
-
             }
 
-            return array;
-//            Log.d("debug", json.getJSONObject("RAW").getJSONObject(array.get(array.size()-1)).toString());
-//            if(json.getString("Response") == "Error"){
-//
-//                return true;
-//            }else{
-//
-//                return false;
-//            }
         }catch (JSONException e) {
 
             e.printStackTrace();
-            return array;
 
         }
     }
-    public ArrayList<String> testFirst(JSONObject json, ArrayList<String> array){
+    public void testFirst(JSONObject json, ArrayList<String> array){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        Log.d("debug", "test() called");
+        Log.d("debug", "testFirst() called");
+
+        Log.d("debug", array.get(array.size()-1));
 
 
         try{
-            Log.d("debug", "test() try called");
+            Log.d("debug", "testFirst() try called");
             Log.d("debug", array.get(array.size()-1));
 
             if(json.getString("Response").equals("Error")){
 
                 Log.d("debug", "wssup inside else if");
-                array.remove(array.size()-1);
-                ArrayList<String> validData = convertToArray(cryptoCoin);
-                validData.remove(validData.size()-1);
-                cryptoCoin = convertToString(validData);
+                Log.d("debug", array.get(array.size()-1));
+
+                cryptoCoin = "";
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
                 Intent myIntent;
                 myIntent = new Intent(MainActivity.this, CoinAddController.class);
+
                 startActivity(myIntent);
 
-            }
 
-            return array;
+            }
 
         }catch (JSONException e) {
 
             e.printStackTrace();
-            return array;
 
         }
     }
 
 }
-//    public boolean test(JSONObject json){
-//        try{
-//            if(json.getString("Response") == "Error" || json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(coinsArrayList.size() -1)) == null){
-//                Log.d("debug", " test called");
-//                return true;
-//            }else{
-//                Log.d("debug", " test called");
-//
-//                return false;
-//            }
-//        }catch (JSONException e) {
-//            e.printStackTrace();
-//            return false;
-//
-//        }
-//    }
-//
-//    public void updateUI(ArrayList<String> list) { //update ui will feature all coins and data, not just one
-//
-//        ArrayList<coinItem> coinList = new ArrayList<>();
-//
-//
-//        for (String x : list) {
-//            count++;
-//            Log.d("debug", x);
-//
-//            if (count == 1) {
-//                params = x;
-//
-//            } else {
-//                params = params + "," + x;
-//            }
-//
-//
-//        }
-//
-//        getCoinData(params);
-//
-//
-//        coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, crypto, currency));
-//
-//
-//        //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
-//
-//        mRecyclerView = findViewById(R.id.recyclerView);
-//        mLayoutManager = new LinearLayoutManager(this);
-//        mAdapter = new CoinAdapter(coinList);
-//
-//        mRecyclerView.setLayoutManager(mLayoutManager);
-//        mRecyclerView.setAdapter(mAdapter);
-//    }
