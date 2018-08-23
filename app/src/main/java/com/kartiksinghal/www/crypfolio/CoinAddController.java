@@ -24,7 +24,7 @@ public class CoinAddController extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String coin = editTextField.getText().toString();
+                String coin = "";
 
                 Intent newCoinIntent = new Intent(CoinAddController.this, MainActivity.class);
                 newCoinIntent.putExtra("Coin", coin );

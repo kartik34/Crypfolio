@@ -202,18 +202,23 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<coinItem> coinList = new ArrayList<>();
 
 
-            for(String i : coinsArrayList){
+            for(String i : Lists.reverse(coinsArrayList)){
+
+                double p = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE");
+                BigDecimal bdp = new BigDecimal(p);
+                bdp = bdp.round(new MathContext(3));
+                double roundedP = bdp.doubleValue();
+                mCoinPrice = "$" + Double.toString(roundedP);
 
 
-                mCoinPrice = Double.toString(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE"));
-                Log.d("check", "hello");
 
-                mCoinPrice = "$" + mCoinPrice;
                 double d = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR");
                 BigDecimal bd = new BigDecimal(d);
                 bd = bd.round(new MathContext(3));
                 double rounded = bd.doubleValue();
-                mCoinDollarChange = Double.toString(rounded);
+                mCoinDollarChange =  Double.toString(rounded);
+
+
                 mCoinPercentChange = Double.toString(Math.round(json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGEPCT24HOUR")));
 
                 coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, i, currency));
