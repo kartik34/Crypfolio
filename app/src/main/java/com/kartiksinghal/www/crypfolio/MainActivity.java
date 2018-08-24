@@ -39,7 +39,7 @@ import cz.msebera.android.httpclient.Header;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private CoinAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
 
@@ -84,16 +84,17 @@ public class MainActivity extends AppCompatActivity {
 
         super.onResume();
         Log.d("Debug", "onResume() called");
-
+        String Coin;
 
         loadData();
         Intent myIntent = getIntent();
 
+        Log.d("delete", "new coin: " + myIntent.getStringExtra("Coin"));
 
-
-        String Coin = myIntent.getStringExtra("Coin");
+         Coin = myIntent.getStringExtra("Coin");
         if(Coin != null && !Coin.equals("")){
-            Log.d("check", "coin == null called");
+            Log.d("delete", "new coin: " + myIntent.getStringExtra("Coin"));
+
             saveData(Coin.toUpperCase());
             loadData();
             updateUI(coinsArrayList);
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
             Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
 
-        }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
+        }else if(!coinsArrayList.isEmpty()){
             Log.d("check", "other called");
 
             updateUI(coinsArrayList);
@@ -114,6 +115,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    protected void onUpdate(){
+
+        loadData();
+        if(coinsArrayList.isEmpty()){
+            Intent noData;
+            noData = new Intent(MainActivity.this, CoinAddController.class);
+            startActivity(noData);
+
+            Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
+
+        }else{
+            Log.d("check", "other called");
+
+            updateUI(coinsArrayList);
+
+        }
+
+    }
+
     private void getCoinData(String coin){
 
         Log.d("debug", "getCoinData() called");
@@ -236,6 +256,33 @@ public class MainActivity extends AppCompatActivity {
             mAdapter = new CoinAdapter(coinList);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setAdapter(mAdapter);
+            mAdapter.setOnItemClickListener(new CoinAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String name) {
+                    if(convertToArray(cryptoCoin).size() == 1){
+
+                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        cryptoCoin = "";
+                        editor.putString(COIN,  cryptoCoin);
+                        editor.apply();
+                        loadData();
+                        onUpdate();
+
+                    }else{
+                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        ArrayList<String> validData = convertToArray(cryptoCoin);
+                        validData.remove(name);
+                        cryptoCoin = convertToString(validData);
+                        editor.putString(COIN,  cryptoCoin);
+                        editor.apply();
+                        loadData();
+                        onUpdate();
+                    }
+
+                }
+            });
 
 
         }catch (JSONException e) {
@@ -310,6 +357,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+//        onResume();
 
         Intent myIntent;
         myIntent = new Intent(MainActivity.this, CoinAddController.class);
