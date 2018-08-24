@@ -1,7 +1,10 @@
 package com.kartiksinghal.www.crypfolio;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -60,11 +63,13 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> coinsArrayList = new ArrayList<>();
 
 
+
     private String cryptoCoin = ""; //string version of coinsArrayList
     final String currency = "USD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -216,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
 
                 double p = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE");
                 BigDecimal bdp = new BigDecimal(p);
-                bdp = bdp.round(new MathContext(3));
+                bdp = bdp.round(new MathContext(5));
                 double roundedP = bdp.doubleValue();
                 mCoinPrice = Double.toString(roundedP);
 
@@ -351,10 +356,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
 //        onResume();
+        if(item.getItemId() == R.id.item1){
+            Intent myIntent;
+            myIntent = new Intent(MainActivity.this, CoinAddController.class);
+            startActivity(myIntent);
+        }else{
+            onUpdate();
+        }
 
-        Intent myIntent;
-        myIntent = new Intent(MainActivity.this, CoinAddController.class);
-        startActivity(myIntent);
 
         return super.onOptionsItemSelected(item);
     }
