@@ -1,6 +1,5 @@
 package com.kartiksinghal.www.crypfolio;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private String mCoinPrice;
     private String mCoinPercentChange;
     private String mCoinDollarChange;
-
+    String temporaryIntent = "jnejrknterj";
 
     int count = 0;
     String params = "";
@@ -66,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String cryptoCoin = ""; //string version of coinsArrayList
     final String currency = "USD";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         mPercentChange =  findViewById(R.id.mPercentChange);
         mPrice =  findViewById(R.id.mPrice);
         mDollarChange = findViewById(R.id.mDollarChange);
-
-
 
 
     }
@@ -94,9 +92,17 @@ public class MainActivity extends AppCompatActivity {
         loadData();
         Intent myIntent = getIntent();
 
+
         Log.d("delete", "new coin: " + myIntent.getStringExtra("Coin"));
 
          Coin = myIntent.getStringExtra("Coin");
+         if(Coin != null && Coin != ""){
+             if(Coin.equals(temporaryIntent)){
+                 Coin = "";
+             }
+         }
+        temporaryIntent = myIntent.getStringExtra("Coin");
+
         if(Coin != null && !Coin.equals("")){
             Log.d("delete", "new coin: " + myIntent.getStringExtra("Coin"));
 
@@ -226,7 +232,6 @@ public class MainActivity extends AppCompatActivity {
                 mCoinPrice = Double.toString(roundedP);
 
 
-
                 double d = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR");
                 BigDecimal bd = new BigDecimal(d);
                 bd = bd.round(new MathContext(3));
@@ -275,6 +280,8 @@ public class MainActivity extends AppCompatActivity {
                         editor.putString(COIN,  cryptoCoin);
                         editor.apply();
                         loadData();
+                        Toast.makeText(MainActivity.this, "Deleting Coin", Toast.LENGTH_SHORT).show();
+
                         onUpdate();
                     }
 
@@ -361,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
             myIntent = new Intent(MainActivity.this, CoinAddController.class);
             startActivity(myIntent);
         }else{
+            Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
             onUpdate();
         }
 

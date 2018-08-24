@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class CoinAddController extends AppCompatActivity {
@@ -18,7 +19,7 @@ public class CoinAddController extends AppCompatActivity {
         setContentView(R.layout.add_coin);
 
         final EditText editTextField = findViewById(R.id.nameOfCoin);
-        Button backButton = findViewById(R.id.backButton);
+        ImageButton backButton = findViewById(R.id.backButton);
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
