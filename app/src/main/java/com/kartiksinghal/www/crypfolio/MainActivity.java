@@ -117,20 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
     protected void onUpdate(){
 
-        loadData();
-        if(coinsArrayList.isEmpty()){
-            Intent noData;
-            noData = new Intent(MainActivity.this, CoinAddController.class);
-            startActivity(noData);
-
-            Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
-
-        }else{
-            Log.d("check", "other called");
-
-            updateUI(coinsArrayList);
-
-        }
+        updateUI(coinsArrayList);
 
     }
 
@@ -260,16 +247,21 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(String name) {
                     if(convertToArray(cryptoCoin).size() == 1){
-
+                        Log.d("delete", "inside if: " + cryptoCoin);
                         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         cryptoCoin = "";
                         editor.putString(COIN,  cryptoCoin);
                         editor.apply();
                         loadData();
-                        onUpdate();
+                        Intent noData;
+                        noData = new Intent(MainActivity.this, CoinAddController.class);
+                        startActivity(noData);
+                        Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
 
                     }else{
+                        Log.d("delete", "inside else: " + cryptoCoin);
+
                         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         ArrayList<String> validData = convertToArray(cryptoCoin);
