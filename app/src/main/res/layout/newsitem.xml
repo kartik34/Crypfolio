@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="#FFFFFF"
+
+    app:cardCornerRadius="10dp">
+
+
+    <LinearLayout
+        android:id="@+id/newsItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="25dp"
+            android:id="@+id/image_delete"
+            android:layout_height="25dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_delete" />
+
+        <TextView
+            android:id="@+id/mTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:ems="10"
+            android:fontFamily="@font/raleway_bold"
+            android:gravity="center"
+            android:text="@string/name"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/mPrice"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+
+            android:text="@string/price"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/mPercentChange"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+
+            android:text="@string/percent_change"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/mDollarChange"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:gravity="center"
+
+            android:text="@string/change_in_magnitude"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
     final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COIN = "coin";
-    TextView mName;
-    TextView mPercentChange;
-    TextView mPrice;
-    TextView mDollarChange;
     private String mCoinPrice;
     private String mCoinPercentChange;
     private String mCoinDollarChange;
@@ -73,10 +69,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mName =  findViewById(R.id.mName);
-        mPercentChange =  findViewById(R.id.mPercentChange);
-        mPrice =  findViewById(R.id.mPrice);
-        mDollarChange = findViewById(R.id.mDollarChange);
 
 
     }
@@ -285,6 +277,14 @@ public class MainActivity extends AppCompatActivity {
                         onUpdate();
                     }
 
+                }
+
+                @Override
+                public void onCoinClick(String name) {
+//                    Intent news;
+//                    news = new Intent(MainActivity.this, NewsData.class);
+//                    news.putExtra("Coin", name );
+//                    startActivity(news);
                 }
             });
 

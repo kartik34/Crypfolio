@@ -17,6 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CoinAddController" />
+        <activity android:name=".NewsData" />
+
 
         <meta-data
             android:name="preloaded_fonts"
