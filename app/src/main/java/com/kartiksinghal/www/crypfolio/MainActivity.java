@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
 
                 double pc = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGEPCT24HOUR");
                 BigDecimal bdpc = new BigDecimal(pc);
-                bdpc = bdpc.round(new MathContext(1));
+                bdpc = bdpc.round(new MathContext(2));
                 double roundedPC = bdpc.doubleValue();
                 mCoinPercentChange = Double.toString(roundedPC);
 
@@ -281,10 +281,10 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCoinClick(String name) {
-//                    Intent news;
-//                    news = new Intent(MainActivity.this, NewsData.class);
-//                    news.putExtra("Coin", name );
-//                    startActivity(news);
+                    Intent news;
+                    news = new Intent(MainActivity.this, NewsData.class);
+                    news.putExtra("Coin", name );
+                    startActivity(news);
                 }
             });
 
