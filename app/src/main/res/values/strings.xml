@@ -3,6 +3,13 @@
     <string name="add_crypto">Add a New Coin</string>
     <string name="name">Coin Name</string>
     <string name="price">Price</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="publishedAt">Date</string>
+    <string name="source">Source</string>
+
+
+
     <string name="percent_change">Percent Change</string>
     <string name="back_button">Back</string>
     <string name="change_in_magnitude">Change in Magnitude</string>
