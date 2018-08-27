@@ -35,10 +35,10 @@ public class NewsData extends AppCompatActivity {
     String mImageUrl;
     String mBody;
     String mTags;
+    String mDate;
     String apiKey = "bf9c5e28cf4c4d55b6ec53f000123fec";
     final String URL = "https://newsapi.org/v2/everything";
-//    String exampleRequest = "https://newsapi.org/v2/everything";
-    //?language=en&q=+crypto%22doge%22&sortBy=publishedAt&apiKey=bf9c5e28cf4c4d55b6ec53f000123fec
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -65,7 +65,7 @@ public class NewsData extends AppCompatActivity {
 
         Log.d("debug", "getCoinData() called");
         RequestParams params = new RequestParams();
-        params.put("q", "+"+coin);
+        params.put("q", "crypto+"+coin);
         params.put("language", "en");
         params.put("sortBy", "publishedAt");
 
