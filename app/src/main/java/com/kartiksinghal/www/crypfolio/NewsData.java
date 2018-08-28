@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -30,10 +31,15 @@ import cz.msebera.android.httpclient.Header;
 
 public class NewsData extends AppCompatActivity {
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+
     String mURL;
     String mTitle;
     String mImageUrl;
-    String mBody;
+    String mDescription;
     String mTags;
     String mDate;
     String apiKey = "bf9c5e28cf4c4d55b6ec53f000123fec";
@@ -45,6 +51,8 @@ public class NewsData extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newsitem);
 
+        ArrayList<NewsItem> newsList = new ArrayList<>();
+        newsList.add(new NewsItem("feerrf","Bitcoin rocks", "ewfewfw", "Blah blah blah", "edee", "sept 1st", "techcrunch.com"));
     }
     @Override
     protected void onResume() {

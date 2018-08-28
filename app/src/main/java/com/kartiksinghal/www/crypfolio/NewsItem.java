@@ -5,17 +5,19 @@ public class NewsItem {
     private String mURL;
     private String mTitle;
     private String mImageUrl;
-    private String mBody;
+    private String mDescription;
     private String mTags;
     private String mDate;
+    private String mSource;
 
-    public NewsItem(String mURL, String mTitle, String mImageUrl, String mBody, String mTags, String mDate) {
+    public NewsItem(String mURL, String mTitle, String mImageUrl, String mDescription, String mTags, String mDate, String mSource) {
         this.mURL = mURL;
         this.mTitle = mTitle;
         this.mImageUrl = mImageUrl;
-        this.mBody = mBody;
+        this.mDescription = mDescription;
         this.mTags = mTags;
         this.mDate = mDate;
+        this.mSource = mSource;
     }
 
     public String getmURL() {
@@ -30,8 +32,8 @@ public class NewsItem {
         return mImageUrl;
     }
 
-    public String getmBody() {
-        return mBody;
+    public String getmDescription() {
+        return mDescription;
     }
 
     public String getmTags() {
@@ -40,5 +42,9 @@ public class NewsItem {
 
     public String getmDate() {
         return mDate;
+    }
+
+    public String getmSource() {
+        return mSource;
     }
 }
