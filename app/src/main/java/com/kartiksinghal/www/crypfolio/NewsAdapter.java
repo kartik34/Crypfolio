@@ -1,11 +1,15 @@
 package com.kartiksinghal.www.crypfolio;
+import android.graphics.Color;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -19,16 +23,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         public TextView mDate;
         public TextView mDescription;
         public TextView mSource;
+        public LinearLayout mNewsItem;
 
 
 
         public NewsViewHolder(@NonNull View itemView) {
             super(itemView);
-            mNewsImage.findViewById(R.id.mNewsImage);
-            mTitle.findViewById(R.id.mTitle);
-            mDate.findViewById(R.id.mDate);
-            mDescription.findViewById(R.id.mDescription);
-            mSource.findViewById(R.id.mSource);
+            mTitle = itemView.findViewById(R.id.mTitle);
+            mDate = itemView.findViewById(R.id.mDate);
+            mDescription = itemView.findViewById(R.id.mDescription);
+            mSource = itemView.findViewById(R.id.mSource);
+            mNewsItem = itemView.findViewById(R.id.newsItem);
+            mNewsImage = itemView.findViewById(R.id.mNewsImage);
+
 
         }
     }

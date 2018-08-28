@@ -49,25 +49,35 @@ public class NewsData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.newsitem);
-
+        setContentView(R.layout.news_activity);
         ArrayList<NewsItem> newsList = new ArrayList<>();
         newsList.add(new NewsItem("feerrf","Bitcoin rocks", "ewfewfw", "Blah blah blah", "edee", "sept 1st", "techcrunch.com"));
+
+        mRecyclerView= findViewById(R.id.recyclerViewNews);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new NewsAdapter(newsList);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+
+
     }
     @Override
     protected void onResume() {
 
 
         super.onResume();
-        Log.d("Debug", "onResume() called");
-        String Coin;
-        Intent myIntent = getIntent();
-        Log.d("DEBUG", "new coin: " + myIntent.getStringExtra("Coin"));
-
-
-        Coin = myIntent.getStringExtra("Coin");
-
-        getCoinData(Coin);
+//        Log.d("Debug", "onResume() called");
+//        String Coin;
+//        Intent myIntent = getIntent();
+//        Log.d("DEBUG", "new coin: " + myIntent.getStringExtra("Coin"));
+//
+//
+//        Coin = myIntent.getStringExtra("Coin");
+//
+//        getCoinData(Coin);
     }
     private void getCoinData(String coin){
 
