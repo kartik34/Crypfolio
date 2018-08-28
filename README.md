@@ -1,4 +1,4 @@
-# <img src="https://i.imgur.com/5LEqkQ1.png" height="42" width="42">
+# <img src="https://i.imgur.com/5LEqkQ1.png" height="100dp">
 
 
 <p>
