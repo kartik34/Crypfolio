@@ -128,6 +128,24 @@ public class NewsData extends AppCompatActivity {
                 mDate = json.getJSONArray("articles").getJSONObject(count).getString("publishedAt");
                 mSource = json.getJSONArray("articles").getJSONObject(count).getJSONObject("source").getString("name");
                 mImageUrl = json.getJSONArray("articles").getJSONObject(count).getString("urlToImage");
+                Log.d("btctest", mTitle);
+                Log.d("btctest", mImageUrl);
+                if (mImageUrl.equals("null")) {
+                    mImageUrl = "https://i.imgur.com/t85MLGg.png";
+
+                }else if(mImageUrl.equals("")){
+                    mImageUrl = "https://i.imgur.com/t85MLGg.png";
+                }
+                else{
+                    String check = mImageUrl.substring(0,4);
+                    if(!check.equals("http")){
+                        mImageUrl = "https://i.imgur.com/t85MLGg.png";
+                    }
+                }
+
+
+                Log.d("btctest", mTitle);
+                Log.d("btctest", mImageUrl);
                 newsList.add(new NewsItem("feerrf",mTitle, mImageUrl, mDescription, "edee", mDate, mSource));
 
 

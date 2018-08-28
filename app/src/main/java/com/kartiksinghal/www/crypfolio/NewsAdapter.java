@@ -69,7 +69,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         newsViewHolder.mDate.setText(date);
 
 
-        Picasso.get().load(currentItem.getmImageUrl()).transform(new RoundedCornersTransform()).into(newsViewHolder.mNewsImage);
+            Picasso.get().load(currentItem.getmImageUrl()).transform(new RoundedCornersTransform()).into(newsViewHolder.mNewsImage);
+
+
 
 
 
