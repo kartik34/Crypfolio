@@ -42,6 +42,7 @@ public class NewsData extends AppCompatActivity {
     String mDescription;
     String mTags;
     String mDate;
+    String mSource;
     String apiKey = "bf9c5e28cf4c4d55b6ec53f000123fec";
     final String URL = "https://newsapi.org/v2/everything";
 
@@ -74,7 +75,7 @@ public class NewsData extends AppCompatActivity {
 
         Log.d("debug", "getCoinData() called");
         RequestParams params = new RequestParams();
-        params.put("q", "crypto+"+coin);
+        params.put("q", "+crypto+'"+coin+"'");
         params.put("language", "en");
         params.put("sortBy", "publishedAt");
 
@@ -116,38 +117,28 @@ public class NewsData extends AppCompatActivity {
 
         try{
             Log.d("debug", "parseJson() called");
-            Log.d("debug", "JSON : "+ json.getJSONArray("articles").toString());
 
+            ArrayList<NewsItem> newsList = new ArrayList<>();
 
+            for(int count = 0 ; count < json.getJSONArray("articles").length(); count++){
 
-
-//            ArrayList<NewsItem> newsList = new ArrayList<>();
-//            newsList.add(new NewsItem("feerrf","Bitcoin rocks", "ewfewfw", "Blah blah blah", "edee", "sept 1st", "techcrunch.com"));
-//            newsList.add(new NewsItem("feerrf","Ripple rising", "ewfewfw", "This and that and this", "edee", "sept 2st", "recode.com"));
-//            newsList.add(new NewsItem("feerrf","Tesla announces crpytocurrency to compete with Bitcoin ", "ewfewfw", "Many are questioning Musk's sanity on this one...", "Tesla, Bitcoin", "sept 2st", "recode.com"));
-//
-//            mRecyclerView= findViewById(R.id.recyclerViewNews);
-//            mLayoutManager = new LinearLayoutManager(this);
-//            mAdapter = new NewsAdapter(newsList);
-//
-//            mRecyclerView.setLayoutManager(mLayoutManager);
-//
-//            mRecyclerView.setAdapter(mAdapter);
-
-
-            for(int i =0; i<20; i++){
-
-               i++;
+                Log.d("debug", "JSON : "+ json.getJSONArray("articles").getJSONObject(count).getString("title"));
+                mTitle = json.getJSONArray("articles").getJSONObject(count).getString("title");
+                mDescription = json.getJSONArray("articles").getJSONObject(count).getString("description");
+                mDate = json.getJSONArray("articles").getJSONObject(count).getString("publishedAt");
+                mSource = json.getJSONArray("articles").getJSONObject(count).getJSONObject("source").getString("name");
+                newsList.add(new NewsItem("feerrf",mTitle, "ewfewfw", mDescription, "edee", mDate, mSource));
 
 
             }
-//            mRecyclerView = findViewById(R.id.recyclerView);
-//            mLayoutManager = new LinearLayoutManager(this);
-//            mAdapter = new CoinAdapter(coinList);
-//            mRecyclerView.setLayoutManager(mLayoutManager);
-//            mRecyclerView.setAdapter(mAdapter);
-//            mAdapter.setOnItemClickListener(new CoinAdapter.OnItemClickListener() {
-//
+
+            mRecyclerView= findViewById(R.id.recyclerViewNews);
+            mLayoutManager = new LinearLayoutManager(this);
+            mAdapter = new NewsAdapter(newsList);
+
+            mRecyclerView.setLayoutManager(mLayoutManager);
+
+            mRecyclerView.setAdapter(mAdapter);
 
 //                @Override
 //                public void onTitleLink(String name) {
