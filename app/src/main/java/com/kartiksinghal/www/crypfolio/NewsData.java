@@ -52,6 +52,8 @@ public class NewsData extends AppCompatActivity {
         setContentView(R.layout.news_activity);
         ArrayList<NewsItem> newsList = new ArrayList<>();
         newsList.add(new NewsItem("feerrf","Bitcoin rocks", "ewfewfw", "Blah blah blah", "edee", "sept 1st", "techcrunch.com"));
+        newsList.add(new NewsItem("feerrf","Ripple rising", "ewfewfw", "This and that and this", "edee", "sept 2st", "recode.com"));
+        newsList.add(new NewsItem("feerrf","Tesla announces crpytocurrency to compete with Bitcoin ", "ewfewfw", "Many are questioning Musk's sanity on this one...", "Tesla, Bitcoin", "sept 2st", "recode.com"));
 
         mRecyclerView= findViewById(R.id.recyclerViewNews);
         mLayoutManager = new LinearLayoutManager(this);
