@@ -50,18 +50,7 @@ public class NewsData extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_activity);
-        ArrayList<NewsItem> newsList = new ArrayList<>();
-        newsList.add(new NewsItem("feerrf","Bitcoin rocks", "ewfewfw", "Blah blah blah", "edee", "sept 1st", "techcrunch.com"));
-        newsList.add(new NewsItem("feerrf","Ripple rising", "ewfewfw", "This and that and this", "edee", "sept 2st", "recode.com"));
-        newsList.add(new NewsItem("feerrf","Tesla announces crpytocurrency to compete with Bitcoin ", "ewfewfw", "Many are questioning Musk's sanity on this one...", "Tesla, Bitcoin", "sept 2st", "recode.com"));
 
-        mRecyclerView= findViewById(R.id.recyclerViewNews);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new NewsAdapter(newsList);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mRecyclerView.setAdapter(mAdapter);
 
 
 
@@ -71,15 +60,15 @@ public class NewsData extends AppCompatActivity {
 
 
         super.onResume();
-//        Log.d("Debug", "onResume() called");
-//        String Coin;
-//        Intent myIntent = getIntent();
-//        Log.d("DEBUG", "new coin: " + myIntent.getStringExtra("Coin"));
-//
-//
-//        Coin = myIntent.getStringExtra("Coin");
-//
-//        getCoinData(Coin);
+        Log.d("Debug", "onResume() called");
+        String Coin;
+        Intent myIntent = getIntent();
+        Log.d("DEBUG", "new coin: " + myIntent.getStringExtra("Coin"));
+
+
+        Coin = myIntent.getStringExtra("Coin");
+
+        getCoinData(Coin);
     }
     private void getCoinData(String coin){
 
@@ -109,6 +98,8 @@ public class NewsData extends AppCompatActivity {
 //                parseJson(response);
                 Log.d("debug", response.toString());
 
+                parseJson(response);
+
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject response){
@@ -125,12 +116,23 @@ public class NewsData extends AppCompatActivity {
 
         try{
             Log.d("debug", "parseJson() called");
-            Log.d("debug", "JSON : "+ json.toString());
-
-            Log.d("debug", "price: " + Double.toString(json.getJSONObject("RAW").getJSONObject("erfe").getJSONObject("erfe").getDouble("PRICE")));
+            Log.d("debug", "JSON : "+ json.getJSONArray("articles").toString());
 
 
-            ArrayList<coinItem> newsList = new ArrayList<>();
+
+
+//            ArrayList<NewsItem> newsList = new ArrayList<>();
+//            newsList.add(new NewsItem("feerrf","Bitcoin rocks", "ewfewfw", "Blah blah blah", "edee", "sept 1st", "techcrunch.com"));
+//            newsList.add(new NewsItem("feerrf","Ripple rising", "ewfewfw", "This and that and this", "edee", "sept 2st", "recode.com"));
+//            newsList.add(new NewsItem("feerrf","Tesla announces crpytocurrency to compete with Bitcoin ", "ewfewfw", "Many are questioning Musk's sanity on this one...", "Tesla, Bitcoin", "sept 2st", "recode.com"));
+//
+//            mRecyclerView= findViewById(R.id.recyclerViewNews);
+//            mLayoutManager = new LinearLayoutManager(this);
+//            mAdapter = new NewsAdapter(newsList);
+//
+//            mRecyclerView.setLayoutManager(mLayoutManager);
+//
+//            mRecyclerView.setAdapter(mAdapter);
 
 
             for(int i =0; i<20; i++){
