@@ -4,13 +4,14 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,8 +34,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             mDate = itemView.findViewById(R.id.mDate);
             mDescription = itemView.findViewById(R.id.mDescription);
             mSource = itemView.findViewById(R.id.mSource);
-            mNewsItem = itemView.findViewById(R.id.newsItem);
             mNewsImage = itemView.findViewById(R.id.mNewsImage);
+
+            mNewsItem = itemView.findViewById(R.id.newsItem);
 
 
         }
@@ -62,7 +64,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         newsViewHolder.mTitle.setText(currentItem.getmTitle());
         newsViewHolder.mDescription.setText(currentItem.getmDescription());
         newsViewHolder.mSource.setText(currentItem.getmSource());
-        newsViewHolder.mDate.setText(currentItem.getmDate());
+
+        String date = currentItem.getmDate().substring(0, 10);
+        newsViewHolder.mDate.setText(date);
+
+
+        Picasso.get().load(currentItem.getmImageUrl()).transform(new RoundedCornersTransform()).into(newsViewHolder.mNewsImage);
 
 
 

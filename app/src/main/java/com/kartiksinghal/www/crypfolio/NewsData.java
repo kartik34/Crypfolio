@@ -127,7 +127,8 @@ public class NewsData extends AppCompatActivity {
                 mDescription = json.getJSONArray("articles").getJSONObject(count).getString("description");
                 mDate = json.getJSONArray("articles").getJSONObject(count).getString("publishedAt");
                 mSource = json.getJSONArray("articles").getJSONObject(count).getJSONObject("source").getString("name");
-                newsList.add(new NewsItem("feerrf",mTitle, "ewfewfw", mDescription, "edee", mDate, mSource));
+                mImageUrl = json.getJSONArray("articles").getJSONObject(count).getString("urlToImage");
+                newsList.add(new NewsItem("feerrf",mTitle, mImageUrl, mDescription, "edee", mDate, mSource));
 
 
             }

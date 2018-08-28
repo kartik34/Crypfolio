@@ -30,6 +30,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0-rc01'
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'com.google.guava:guava:26.0-jre'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 
 }
