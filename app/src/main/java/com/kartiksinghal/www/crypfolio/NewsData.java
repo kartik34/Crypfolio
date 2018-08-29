@@ -60,6 +60,8 @@ public class NewsData extends AppCompatActivity {
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
+        if(getSupportActionBar() !=null) getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
 
     }
