@@ -2,10 +2,14 @@ package com.kartiksinghal.www.crypfolio;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,14 +20,20 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.annotation.Nullable;
 
+import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -32,35 +42,37 @@ import cz.msebera.android.httpclient.Header;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private CoinAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+
     final String URL = "https://min-api.cryptocompare.com/data/pricemultifull";
-
-    TextView mName;
-    TextView mPercentChange;
-    TextView mPrice;
-    TextView mDollarChange;
-
-    ArrayList<String> coinsArrayList = new ArrayList<>();
-
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String COIN = "coin";
+    private String mCoinPrice;
+    private String mCoinPercentChange;
+    private String mCoinDollarChange;
+    String temporaryIntent = "jnejrknterj";
 
-    private String cryptoCoin;
+    int count = 0;
+    String params = "";
+    ArrayList<String> coinsArrayList = new ArrayList<>();
 
-    String crypto;
+
+
+    private String cryptoCoin = ""; //string version of coinsArrayList
     final String currency = "USD";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mName =  findViewById(R.id.mName);
-        mPercentChange =  findViewById(R.id.mPercentChange);
-        mPrice =  findViewById(R.id.mPrice);
-        mDollarChange = findViewById(R.id.mDollarChange);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() !=null) getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
 
@@ -72,40 +84,57 @@ public class MainActivity extends AppCompatActivity {
 
         super.onResume();
         Log.d("Debug", "onResume() called");
-
+        String Coin;
 
         loadData();
         Intent myIntent = getIntent();
 
-        String Coin = myIntent.getStringExtra("Coin");
+
+        Log.d("delete", "new coin: " + myIntent.getStringExtra("Coin"));
+
+         Coin = myIntent.getStringExtra("Coin");
+         if(Coin != null && Coin != ""){
+             if(Coin.equals(temporaryIntent)){
+                 Coin = "";
+             }
+         }
+        temporaryIntent = myIntent.getStringExtra("Coin");
+
+        if(Coin != null && !Coin.equals("")){
+            Log.d("delete", "new coin: " + myIntent.getStringExtra("Coin"));
+
+            saveData(Coin.toUpperCase());
+            loadData();
+            updateUI(coinsArrayList);
 
 
+        }else if(coinsArrayList.get(0).equals("") ||coinsArrayList.get(0) == null){
+            Intent noData;
+            noData = new Intent(MainActivity.this, onStartController.class);
+            startActivity(noData);
 
-        if(Coin != null){
+//            Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
 
+        }else if(!coinsArrayList.isEmpty()){
+            Log.d("check", "other called");
 
-            getCoinData(Coin);
-
-
-        }else if(coinsArrayList.get(0) != "" && coinsArrayList.get(0) != null){
-            getCoinData(coinsArrayList.get(1));
+            updateUI(coinsArrayList);
 
         }
 
+    }
+    protected void onUpdate(){
 
-
-
+        updateUI(coinsArrayList);
 
     }
+
     private void getCoinData(String coin){
 
+        Log.d("debug", "getCoinData() called");
         RequestParams params = new RequestParams();
         params.put("fsyms", coin);
         params.put("tsyms", currency);
-
-        crypto = coin;
-
-        CoinDataModel constantModel = CoinDataModel.setConstants(currency, coin);
 
         connect(params);
     }
@@ -114,33 +143,33 @@ public class MainActivity extends AppCompatActivity {
 
         AsyncHttpClient client = new AsyncHttpClient();
 
+        Log.d("debug", "connect() called");
+
         client.get(URL, params, new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response){
 
-                Log.d("Debug", "Success: " + response.toString());
-
-
-                CoinDataModel coinData = CoinDataModel.fromJSON(response); //use constructor to create dataModel object
-
-                if(coinData == null){
-
-                    Intent myIntent;
-                    myIntent = new Intent(MainActivity.this, CoinAddController.class);
-                    startActivity(myIntent);
-
-                    Toast.makeText(MainActivity.this, "Invalid coin (Must be all caps and coin code)", Toast.LENGTH_LONG).show();
+                Log.d("Debug", "onSuccess() called");
+                Log.d("Debug", "array size"+ coinsArrayList.size());
+                Log.d("Debug", "API Response: " + response.toString());
+                if(coinsArrayList.size() == 1){
+                    testFirst(response, coinsArrayList);
 
                 }else{
 
-
-                    saveData(CoinDataModel.getCrypto());
-                    loadData();
-
-                    updateUI(coinData); //Update the UI by passing dataModel object
+                    test(response, coinsArrayList);
 
                 }
+
+                Log.d("debug" , "Coinsarraylist: " + coinsArrayList.get(coinsArrayList.size()-1));
+                Log.d("debug", "cryptoCoin: " + cryptoCoin);
+
+
+
+                parseJson(response);
+
+
 
             }
             @Override
@@ -155,69 +184,166 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateUI(CoinDataModel coin){ //update ui will feature all coins and data, not just one
+    public void updateUI(ArrayList<String> list) { //update ui will feature all coins and data, not just one
 
-        ArrayList<coinItem> coinList = new ArrayList<>();
-        Log.d("debug", crypto + currency);
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
-        coinList.add(new coinItem(coin.getmPrice(), coin.getmPercentChange(), coin.getmDollarChange(), CoinDataModel.getCrypto(), CoinDataModel.getCurrency()));
 
-        //this line adds a new coinItem Object containing all the attributes of the coin into the coinlist array.
 
-        mRecyclerView = findViewById(R.id.recyclerView);
-        mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new CoinAdapter(coinList);
+        for (String x : list) {
+            count++;
+            Log.d("debug", x);
 
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+            if (count == 1) {
+                params = x;
 
-//         mName.setText(crypto);
-//        String price = "$" + coin.getmPrice() + " USD";
-//        mPrice.setText(price);
-//
-//        String percentChange = "Δ24h " + coin.getmPercentChange() + "%";
-//
-//        mPercentChange.setText(percentChange);
-//
-//        String dollarChange = "Δ24h $" + coin.getmDollarChange();
-//
-//        mDollarChange.setText(dollarChange);
-//        // ADD NEW SECTION HERE ONLY
+            } else {
+                params = params + "," + x;
+            }
+
+
+        }
+
+        getCoinData(params);
+
 
     }
+
+    public void parseJson(JSONObject json){
+
+        try{
+            Log.d("debug", "parseJson() called");
+            Log.d("debug", "JSON : "+ json.toString());
+
+            loadData();
+            Log.d("debug", "price: " + Double.toString(json.getJSONObject("RAW").getJSONObject(coinsArrayList.get(coinsArrayList.size()-1)).getJSONObject(currency).getDouble("PRICE")));
+
+
+            ArrayList<coinItem> coinList = new ArrayList<>();
+
+
+            for(String i : Lists.reverse(coinsArrayList)){
+
+                double p = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("PRICE");
+                BigDecimal bdp = new BigDecimal(p);
+                bdp = bdp.round(new MathContext(5));
+                double roundedP = bdp.doubleValue();
+                mCoinPrice = Double.toString(roundedP);
+
+
+                double d = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGE24HOUR");
+                BigDecimal bd = new BigDecimal(d);
+                bd = bd.round(new MathContext(3));
+
+                mCoinDollarChange = bd.toString();
+
+                double pc = json.getJSONObject("RAW").getJSONObject(i).getJSONObject(currency).getDouble("CHANGEPCT24HOUR");
+                BigDecimal bdpc = new BigDecimal(pc);
+                bdpc = bdpc.round(new MathContext(2));
+                double roundedPC = bdpc.doubleValue();
+                mCoinPercentChange = Double.toString(roundedPC);
+
+                coinList.add(new coinItem(mCoinPrice, mCoinPercentChange, mCoinDollarChange, i, currency));
+
+
+            }
+            mRecyclerView = findViewById(R.id.recyclerView);
+            mLayoutManager = new LinearLayoutManager(this);
+            mAdapter = new CoinAdapter(coinList);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.setOnItemClickListener(new CoinAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String name) {
+                    if(convertToArray(cryptoCoin).size() == 1){
+                        Log.d("delete", "inside if: " + cryptoCoin);
+                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        cryptoCoin = "";
+                        editor.putString(COIN,  cryptoCoin);
+                        editor.apply();
+                        loadData();
+                        Intent noData;
+                        noData = new Intent(MainActivity.this, onStartController.class);
+                        startActivity(noData);
+//                        Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
+
+                    }else{
+                        Log.d("delete", "inside else: " + cryptoCoin);
+
+                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        ArrayList<String> validData = convertToArray(cryptoCoin);
+                        validData.remove(name);
+                        cryptoCoin = convertToString(validData);
+                        editor.putString(COIN,  cryptoCoin);
+                        editor.apply();
+                        loadData();
+                        Toast.makeText(MainActivity.this, "Deleting Coin", Toast.LENGTH_SHORT).show();
+
+                        onUpdate();
+                    }
+
+                }
+
+                @Override
+                public void onCoinClick(String name) {
+                    Intent news;
+                    news = new Intent(MainActivity.this, NewsData.class);
+                    news.putExtra("Coin", name );
+                    startActivity(news);
+                }
+            });
+
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+
+
+        }
+
+
+    }
+
+    //===================================================================================================================
+
+    //                                  Don't touch
+
+    //===================================================================================================================
     public void saveData(String coin){
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         if(coinsArrayList.contains(coin) == false){
+
+            Log.d("debug", "saveData() called");
             if(cryptoCoin != "" && cryptoCoin != null){
                 cryptoCoin = sharedPreferences.getString(COIN, "");
 
                 cryptoCoin = cryptoCoin + "," + coin;
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
-                Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
 
             }else{
                 cryptoCoin = coin;
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
-                Toast.makeText(this, "Coin Saved", Toast.LENGTH_SHORT).show();
             }
 
+        }else{
+            Intent myIntent;
+            myIntent = new Intent(MainActivity.this, CoinAddController.class);
+            startActivity(myIntent);
+
+            Toast.makeText(MainActivity.this, "You Already Have That Coin Saved", Toast.LENGTH_LONG).show();
         }
-
-
-
 
 
     }
 
     public void loadData(){
+
+        Log.d("debug", "loadData() called");
+
 
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
@@ -241,11 +367,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Toast.makeText(this, "Item clicked", Toast.LENGTH_SHORT).show();
+//        onResume();
+        if(item.getItemId() == R.id.item1){
+            Intent myIntent;
+            myIntent = new Intent(MainActivity.this, CoinAddController.class);
+            startActivity(myIntent);
+        }else{
+            Toast.makeText(this, "Refreshing...", Toast.LENGTH_SHORT).show();
+            onUpdate();
+        }
 
-        Intent myIntent;
-        myIntent = new Intent(MainActivity.this, CoinAddController.class);
-        startActivity(myIntent);
 
         return super.onOptionsItemSelected(item);
     }
@@ -266,4 +397,73 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> list = new ArrayList<String>(Arrays.asList(string.split(",")));
         return list;
     }
+    public void test(JSONObject json, ArrayList<String> array){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Log.d("debug", "test() called");
+
+
+        try{
+            Log.d("debug", "test() try called");
+            Log.d("debug", array.get(array.size()-1));
+
+            if(!json.getJSONObject("RAW").has(array.get(array.size()-1))){
+                array.remove(array.size()-1);
+                ArrayList<String> validData = convertToArray(cryptoCoin);
+                validData.remove(validData.size()-1);
+                cryptoCoin = convertToString(validData);
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Log.d("debug", "failure, send back to search page");
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                Toast.makeText(this, "Invalid Input (Enter coin code)", Toast.LENGTH_SHORT).show();
+                startActivity(myIntent);
+            }
+
+        }catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+    }
+    public void testFirst(JSONObject json, ArrayList<String> array){
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        Log.d("debug", "testFirst() called");
+
+        Log.d("debug", array.get(array.size()-1));
+
+
+        try{
+            Log.d("debug", "testFirst() try called");
+            Log.d("debug", array.get(array.size()-1));
+
+            if(json.getString("Response").equals("Error")){
+
+                Log.d("debug", "wssup inside else if");
+                Log.d("debug", array.get(array.size()-1));
+
+                cryptoCoin = "";
+                editor.putString(COIN,  cryptoCoin);
+                editor.apply();
+                Intent myIntent;
+                myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                Toast.makeText(this, "Invalid Input (Enter coin code)", Toast.LENGTH_SHORT).show();
+
+                startActivity(myIntent);
+
+
+            }
+
+        }catch (JSONException e) {
+
+            e.printStackTrace();
+
+        }
+    }
+
+
 }

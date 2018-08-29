@@ -10,31 +10,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class CoinAddController extends AppCompatActivity {
+public class onStartController extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.add_coin);
+        setContentView(R.layout.onstartmenu);
 
-        final EditText editTextField = findViewById(R.id.nameOfCoin);
-        ImageButton backButton = findViewById(R.id.backButton);
-
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String coin = "";
-
-                Intent newCoinIntent = new Intent(CoinAddController.this, MainActivity.class);
-                newCoinIntent.putExtra("Coin", coin );
-                startActivity(newCoinIntent);
-
-
-                finish(); //destroys the ChangeCityController activity and goes back to the weatherControllerLayout
-            }
-        });
+        final EditText editTextField = findViewById(R.id.nameOfCoin2);
 
         editTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -42,7 +26,7 @@ public class CoinAddController extends AppCompatActivity {
 
                 String coin = editTextField.getText().toString();
 
-                Intent newCoinIntent = new Intent(CoinAddController.this, MainActivity.class);
+                Intent newCoinIntent = new Intent(onStartController.this, MainActivity.class);
                 newCoinIntent.putExtra("Coin", coin );
                 startActivity(newCoinIntent);
 
@@ -56,4 +40,3 @@ public class CoinAddController extends AppCompatActivity {
 
 
 }
-

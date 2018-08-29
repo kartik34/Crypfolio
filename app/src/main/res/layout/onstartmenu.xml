@@ -5,26 +5,9 @@
     android:layout_height="match_parent"
     android:background="@android:color/background_light">
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/cardview_light_background"
-        android:src="@drawable/ic_arrow_back"
-        android:text="@string/back_button"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toStartOf="@+id/textView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/nameOfCoin"
+        android:id="@+id/nameOfCoin2"
         android:layout_width="263dp"
         android:layout_height="67dp"
         android:layout_marginBottom="8dp"
@@ -43,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -52,11 +35,11 @@
         android:layout_marginTop="124dp"
         android:fontFamily="@font/raleway_bold"
         android:gravity="center"
-        android:text="@string/add_crypto"
+        android:text="@string/start_crypto"
 
         android:textColor="@color/cardview_dark_background"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/nameOfCoin"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/nameOfCoin2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
