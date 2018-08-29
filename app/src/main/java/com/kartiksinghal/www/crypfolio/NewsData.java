@@ -54,8 +54,6 @@ public class NewsData extends AppCompatActivity {
         setContentView(R.layout.news_activity);
 
 
-
-
     }
     @Override
     protected void onResume() {
@@ -168,15 +166,6 @@ public class NewsData extends AppCompatActivity {
                     startActivity(browserIntent);
                 }
             });
-
-//                @Override
-//                public void onTitleLink(String name) {
-//                      Intent news;
-//                      news = new Intent(NewsData.this, NewsData.class);
-//                      news.putExtra("Coin", name );
-//                      startActivity(news);
-//                }
-//            });
 
 
         }catch (JSONException e) {
