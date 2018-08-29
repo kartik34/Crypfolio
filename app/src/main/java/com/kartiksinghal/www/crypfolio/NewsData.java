@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,7 +37,6 @@ public class NewsData extends AppCompatActivity {
     private NewsAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-
     String mURL;
     String mTitle;
     String mImageUrl;
@@ -52,6 +52,10 @@ public class NewsData extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_activity);
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
 
     }
