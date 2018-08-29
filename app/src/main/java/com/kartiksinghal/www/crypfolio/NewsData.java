@@ -152,9 +152,12 @@ public class NewsData extends AppCompatActivity {
                     String check = mImageUrl.substring(0,4);
                     if(!check.equals("http")){
                         mImageUrl = "https://i.imgur.com/t85MLGg.png";
-                    }else if(mURL.substring(12, 23).equals("marketwatch")){
-                        mImageUrl = "https://i.imgur.com/t85MLGg.png";
+                    }else if(mURL.length() > 25){
+                        if(mURL.substring(12, 23).equals("marketwatch")){
+                            mImageUrl = "https://i.imgur.com/t85MLGg.png";
+                        }
                     }
+
                 }
 
 
