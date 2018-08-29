@@ -450,7 +450,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.putString(COIN,  cryptoCoin);
                 editor.apply();
                 Intent myIntent;
-                myIntent = new Intent(MainActivity.this, CoinAddController.class);
+                myIntent = new Intent(MainActivity.this, onStartController.class);
                 Toast.makeText(this, "Invalid Input (Enter coin code)", Toast.LENGTH_SHORT).show();
 
                 startActivity(myIntent);
