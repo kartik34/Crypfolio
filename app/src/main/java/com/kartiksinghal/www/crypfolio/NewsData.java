@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,6 +56,8 @@ public class NewsData extends AppCompatActivity {
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
         setSupportActionBar(toolbar);
 
 
@@ -179,6 +182,14 @@ public class NewsData extends AppCompatActivity {
         }
 
 
+    }@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent myIntent;
+        myIntent = new Intent(NewsData.this, MainActivity.class);
+        startActivity(myIntent);
+
+        return super.onOptionsItemSelected(item);
     }
 
 
