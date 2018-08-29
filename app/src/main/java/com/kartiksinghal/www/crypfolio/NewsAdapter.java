@@ -82,7 +82,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         NewsItem currentItem = mNewsList.get(i);
 
         newsViewHolder.mTitle.setText(currentItem.getmTitle());
-        newsViewHolder.mDescription.setText(currentItem.getmDescription());
+        String description = "     " + currentItem.getmDescription();
+        newsViewHolder.mDescription.setText(description);
         newsViewHolder.mSource.setText(currentItem.getmSource());
 
         String date = currentItem.getmDate().substring(0, 10);
