@@ -15,6 +15,19 @@
         layout="@layout/toolbar" />
 
 
+    <TextView
+        android:id="@+id/coinName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:background="@android:color/darker_gray"
+        android:fontFamily="@font/raleway_semibold"
+        android:layout_marginBottom="1dp"
+        android:gravity="center"
+        android:text="Coin Name"
+        android:textColor="@android:color/background_light"
+        android:textSize="20dp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewNews"
         android:layout_width="match_parent"

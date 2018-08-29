@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Crypfolio</string>
     <string name="add_crypto">Add a New Coin</string>
+    <string name="start_crypto">Add a Coin To Start (Ex. ETH)</string>
+
     <string name="name">Coin Name</string>
     <string name="price">Price</string>
     <string name="title">Title</string>

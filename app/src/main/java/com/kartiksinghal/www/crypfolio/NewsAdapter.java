@@ -34,6 +34,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         public TextView mDescription;
         public TextView mSource;
         public LinearLayout mNewsItem;
+        public TextView mName;
         public TextView mURL;
 
 

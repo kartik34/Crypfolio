@@ -109,10 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
         }else if(coinsArrayList.get(0).equals("") ||coinsArrayList.get(0) == null){
             Intent noData;
-            noData = new Intent(MainActivity.this, CoinAddController.class);
+            noData = new Intent(MainActivity.this, onStartController.class);
             startActivity(noData);
 
-            Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
+//            Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
 
         }else if(!coinsArrayList.isEmpty()){
             Log.d("check", "other called");
@@ -261,9 +261,9 @@ public class MainActivity extends AppCompatActivity {
                         editor.apply();
                         loadData();
                         Intent noData;
-                        noData = new Intent(MainActivity.this, CoinAddController.class);
+                        noData = new Intent(MainActivity.this, onStartController.class);
                         startActivity(noData);
-                        Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(MainActivity.this, "Enter a Coin To Start (ex. BTC)", Toast.LENGTH_LONG).show();
 
                     }else{
                         Log.d("delete", "inside else: " + cryptoCoin);

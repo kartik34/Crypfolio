@@ -43,6 +43,7 @@ public class NewsData extends AppCompatActivity {
     String mImageUrl;
     String mDescription;
     String mTags;
+
     String mDate;
     String mSource;
     String apiKey = "bf9c5e28cf4c4d55b6ec53f000123fec";
@@ -74,6 +75,9 @@ public class NewsData extends AppCompatActivity {
 
 
         Coin = myIntent.getStringExtra("Coin");
+        TextView mName = findViewById(R.id.coinName);
+        String headline = "Latest News for " + Coin;
+        mName.setText(headline);
 
         getCoinData(Coin);
     }
