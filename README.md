@@ -4,9 +4,9 @@
 <p>
 <a href="https://play.google.com/store/apps/details?id=com.kartiksinghal.www.crypfolio"> Download from the Google Play Store </a>
 </p>
-<h3>
+<h5>
   A no-frills crypto tracker, easily add your portfolio and stay updated on the latest price updates and news as soon as they happen.
-</h3>
+</h5>
 <h4>
 Features: 
   </h4>
