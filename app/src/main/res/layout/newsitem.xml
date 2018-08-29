@@ -71,6 +71,12 @@
             android:layout_marginRight="10dp"
             android:text="@string/source"
             android:textSize="20sp" />
+        <TextView
+            android:id="@+id/mURL"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text=""
+          />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

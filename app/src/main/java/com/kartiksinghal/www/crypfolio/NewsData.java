@@ -2,6 +2,7 @@ package com.kartiksinghal.www.crypfolio;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,7 +33,7 @@ import cz.msebera.android.httpclient.Header;
 public class NewsData extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private NewsAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
 
@@ -128,6 +129,7 @@ public class NewsData extends AppCompatActivity {
                 mDate = json.getJSONArray("articles").getJSONObject(count).getString("publishedAt");
                 mSource = json.getJSONArray("articles").getJSONObject(count).getJSONObject("source").getString("name");
                 mImageUrl = json.getJSONArray("articles").getJSONObject(count).getString("urlToImage");
+                mURL = json.getJSONArray("articles").getJSONObject(count).getString("url");
                 Log.d("btctest", mTitle);
                 Log.d("btctest", mImageUrl);
                 if (mImageUrl.equals("null")) {
@@ -146,7 +148,7 @@ public class NewsData extends AppCompatActivity {
 
                 Log.d("btctest", mTitle);
                 Log.d("btctest", mImageUrl);
-                newsList.add(new NewsItem("feerrf",mTitle, mImageUrl, mDescription, "edee", mDate, mSource));
+                newsList.add(new NewsItem(mURL,mTitle, mImageUrl, mDescription, "edee", mDate, mSource));
 
 
             }
@@ -158,6 +160,14 @@ public class NewsData extends AppCompatActivity {
             mRecyclerView.setLayoutManager(mLayoutManager);
 
             mRecyclerView.setAdapter(mAdapter);
+            mAdapter.setOnNewsClickListener(new NewsAdapter.OnNewsClickListener() {
+                @Override
+                public void onNewsClick(String url) {
+                    Toast.makeText(NewsData.this, "Redirecting to Article...", Toast.LENGTH_SHORT).show();
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(browserIntent);
+                }
+            });
 
 //                @Override
 //                public void onTitleLink(String name) {

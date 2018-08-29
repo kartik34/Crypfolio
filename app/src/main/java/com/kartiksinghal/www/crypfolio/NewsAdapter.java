@@ -1,6 +1,5 @@
 package com.kartiksinghal.www.crypfolio;
 import android.graphics.Color;
-
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +15,17 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
+
     private ArrayList<NewsItem> mNewsList;
+    private OnNewsClickListener mListener;
+
+    public interface OnNewsClickListener{
+        void onNewsClick(String url);
+    }
+    public void setOnNewsClickListener(OnNewsClickListener listener){
+        mListener = listener;
+    }
+    private static ArrayList<String> url = new ArrayList<>();
     public static class NewsViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView mNewsImage;
@@ -25,18 +34,29 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         public TextView mDescription;
         public TextView mSource;
         public LinearLayout mNewsItem;
+        public TextView mURL;
 
 
 
-        public NewsViewHolder(@NonNull View itemView) {
+        public NewsViewHolder(@NonNull View itemView, final OnNewsClickListener listener) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.mTitle);
             mDate = itemView.findViewById(R.id.mDate);
             mDescription = itemView.findViewById(R.id.mDescription);
             mSource = itemView.findViewById(R.id.mSource);
             mNewsImage = itemView.findViewById(R.id.mNewsImage);
-
+            mURL = itemView.findViewById(R.id.mURL);
             mNewsItem = itemView.findViewById(R.id.newsItem);
+
+            mNewsItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        Log.d("debug", "url: "+ mURL.getText().toString());
+                        listener.onNewsClick(mURL.getText().toString());
+                    }
+                }
+            });
 
 
         }
@@ -52,7 +72,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.newsitem, viewGroup, false);
-        NewsViewHolder nvh =  new NewsViewHolder(v);
+        NewsViewHolder nvh =  new NewsViewHolder(v, mListener);
         return nvh;
     }
 
@@ -68,8 +88,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         String date = currentItem.getmDate().substring(0, 10);
         newsViewHolder.mDate.setText(date);
 
-
-            Picasso.get().load(currentItem.getmImageUrl()).transform(new RoundedCornersTransform()).into(newsViewHolder.mNewsImage);
+        newsViewHolder.mURL.setText(currentItem.getmURL());
+        Picasso.get().load(currentItem.getmImageUrl()).transform(new RoundedCornersTransform()).into(newsViewHolder.mNewsImage);
 
 
 
