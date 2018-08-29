@@ -2,10 +2,10 @@
 
 
 <p>
-Crypfolio is a simple cryptocurrency tracker which enables users to track their assets, as well as view the most recent and relevant news regarding their assets.
+<a href="https://play.google.com/store/apps/details?id=com.kartiksinghal.www.crypfolio"> Download from the Google Play Store </a>
 </p>
 <h3>
-  A no-frills crypto tracker, easily add your portfolio and stay updated on the latest price updates and news as soon as they happen!
+  A no-frills crypto tracker, easily add your portfolio and stay updated on the latest price updates and news as soon as they happen.
 </h3>
 <h4>
 Features: 
@@ -20,6 +20,26 @@ Features:
   
   <li>
      Track the 24 hour price and percentage deltas of your coins
+    </li>
+  
+  
+  </ul>
+
+<h4>Built Using: </h4>
+ 
+  <ul>
+    <li>
+      Android SDK
+    </li>
+  <li>
+    <a href="http://loopj.com/android-async-http/">Android Asynchronous Http Client</a>
+    </li>
+  
+  <li>
+     <a href="https://www.cryptocompare.com/api/#-api-data-price-">CryptoCompare API</a>
+    </li>
+    <li>
+     <a href="https://newsapi.org/docs">News API</a>
     </li>
   
   
