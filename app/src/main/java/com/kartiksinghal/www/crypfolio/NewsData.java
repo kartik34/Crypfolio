@@ -43,7 +43,6 @@ public class NewsData extends AppCompatActivity {
     String mImageUrl;
     String mDescription;
     String mTags;
-
     String mDate;
     String mSource;
     String apiKey = "bf9c5e28cf4c4d55b6ec53f000123fec";
@@ -152,6 +151,8 @@ public class NewsData extends AppCompatActivity {
                 else{
                     String check = mImageUrl.substring(0,4);
                     if(!check.equals("http")){
+                        mImageUrl = "https://i.imgur.com/t85MLGg.png";
+                    }else if(mURL.substring(12, 23).equals("marketwatch")){
                         mImageUrl = "https://i.imgur.com/t85MLGg.png";
                     }
                 }
