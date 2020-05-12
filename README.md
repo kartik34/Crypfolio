@@ -47,13 +47,10 @@ Features:
   
   <h4> Screenshots: </h4>
 
-![Start Page](https://user-images.githubusercontent.com/29404950/81635702-d2180100-93df-11ea-9b05-5a9b5cd4eb39.jpg)
-
-![Add Crypto Page](https://user-images.githubusercontent.com/29404950/81635699-d04e3d80-93df-11ea-8c50-5024ce0a44b9.jpg)
-
-![Dashboard Page](https://user-images.githubusercontent.com/29404950/81635706-d47a5b00-93df-11ea-9d32-fb8670d03631.jpg)
-
-![Crypto News Page](https://user-images.githubusercontent.com/29404950/81635696-ce847a00-93df-11ea-8927-f8c9d0aeeee2.jpg)
+<img src="images/start_up_view.jpg" width="100">
+<img src="images/add_coin_view.jpg" width="100">
+<img src="images/dashboard_view.jpg" width="100">
+<img src="images/crypto_view.jpg" width="100">
 
 
 
