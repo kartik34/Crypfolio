@@ -46,11 +46,15 @@ Features:
   </ul>
   
   <h4> Screenshots: </h4>
+  
+Start Up Page             |  Add Coin View
+:-------------------------:|:-------------------------:
+<img src="images/start_up_view.jpg" width="300px">  | <img src="images/add_coin_view.jpg" width="300px">
 
-<img src="images/start_up_view.jpg" width="100">
-<img src="images/add_coin_view.jpg" width="100">
-<img src="images/dashboard_view.jpg" width="100">
-<img src="images/crypto_view.jpg" width="100">
+Dashboard View           |  Crypto View
+:-------------------------:|:-------------------------:
+<img src="images/dashboard_view.jpg" width="300px"> | <img src="images/crypto_view.jpg" width="300px">
+
 
 
 
